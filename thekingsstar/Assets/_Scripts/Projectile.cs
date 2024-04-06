@@ -18,7 +18,6 @@ public class Projectile : MonoBehaviour, IDamageable
 
     public void Damage()
     {
-        Debug.Log("Interface Event Triggered!");
         Destroy(gameObject);
     }
 }
