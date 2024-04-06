@@ -4,15 +4,34 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    BoxCollider2D _col;
+    [SerializeField] LayerMask projectileLayer;
+
+    private void Start()
     {
-        
+        _col = GetComponent<BoxCollider2D>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            Slash();
+        }
+    }
+
+    void Slash()
+    {
+        RaycastHit2D slashRadius = CheckSlashRadius();
+
+        if (slashRadius.collider != null)
+        {
+            slashRadius.collider.gameObject.GetComponent<Projectile>().Damage();
+        }
+    }
+
+    RaycastHit2D CheckSlashRadius()
+    {
+        return Physics2D.CircleCast(_col.bounds.size, 2, Vector2.right, 0, projectileLayer);
     }
 }
