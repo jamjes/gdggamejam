@@ -32,6 +32,13 @@ public class PlayerController : MonoBehaviour
 
     void Slash()
     {
+        if (isAttacking)
+        {
+            return;
+        }
+
+        
+        StopAllCoroutines();
         StartCoroutine(PlayAttackAnimation());
 
         RaycastHit2D slashRadius = CheckSlashRadius();
@@ -51,7 +58,7 @@ public class PlayerController : MonoBehaviour
     {
         isAttacking = true;
         anim.CrossFade(SlashAnimation, 0, 0);
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(.3f);
         isAttacking = false;
 
     }
