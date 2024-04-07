@@ -27,8 +27,6 @@ public class EnemyManager : MonoBehaviour
     {
         reference += 17;
 
-        Debug.Log("Stage has ended, new ref = " + reference);
-
         switch(reference)
         {
             case 17:

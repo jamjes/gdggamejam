@@ -25,9 +25,7 @@ public class CameraController : MonoBehaviour
         lerping = true;
         startPosition = transform.position;
         reference += 17;
-        Debug.Log("lerp set to true, moving camera to = " + reference);
         endPosition = new Vector3(reference, startPosition.y, startPosition.z);
-        Debug.Log("end position x = " + endPosition.x);
         
     }
 
@@ -53,7 +51,6 @@ public class CameraController : MonoBehaviour
             lerping = false;
             timerRef = 0;
 
-            Debug.Log("lerp complete, camera is at = " + transform.position.x);
         }
     }
 }
