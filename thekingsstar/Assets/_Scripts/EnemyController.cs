@@ -8,11 +8,23 @@ public class EnemyController : MonoBehaviour
     [SerializeField] GameObject projectile;
     float interval = 3;
     float timeRef;
-    Vector3 offset = new Vector3 (-1, .5f, 0);
+
+    static readonly int IdleAnimation = Animator.StringToHash("idle");
+    static readonly int AttackAnimation = Animator.StringToHash("attack");
+
+    [SerializeField] Transform spawnPoint;
+
+    [SerializeField] Animator anim;
+    bool isAttacking = false;
 
     private void Update()
     {
         timeRef += Time.deltaTime;
+
+        if (isAttacking == false)
+        {
+            anim.CrossFade(IdleAnimation, 0, 0);
+        }
 
         if (timeRef >= interval)
         {
@@ -20,11 +32,20 @@ public class EnemyController : MonoBehaviour
 
             interval = Random.Range(3, 7);
             timeRef = 0;
+            StartCoroutine(ShootCoroutine());
         }
     }
 
     void SpawnProjectile()
     {
-        Instantiate(projectile, transform.position + offset, Quaternion.identity);
+        Instantiate(projectile, spawnPoint.position, Quaternion.identity);
+    }
+
+    IEnumerator ShootCoroutine()
+    {
+        isAttacking = true;
+        anim.CrossFade(AttackAnimation, 0, 0);
+        yield return new WaitForSeconds(.5f);
+        isAttacking = false;
     }
 }
