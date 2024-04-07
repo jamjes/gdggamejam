@@ -36,17 +36,16 @@ public class EnemyController : MonoBehaviour
     {
         Projectile.OnDeathEnter += End;
         ProjectileInverse.OnDeathEnter += End;
-        Door.OnGameWin += End;
+        
     }
 
     private void OnDisable()
     {
         Projectile.OnDeathEnter -= End;
         ProjectileInverse.OnDeathEnter -= End;
-        Door.OnGameWin -= End;
     }
 
-    void End()
+    public void End()
     {
         run = false;
     }
@@ -71,7 +70,7 @@ public class EnemyController : MonoBehaviour
     {
         if (!run)
         {
-            StopAllCoroutines();
+            //StopAllCoroutines();
             return;
         }
 

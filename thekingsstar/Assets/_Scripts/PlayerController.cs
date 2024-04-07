@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.SearchService;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -27,7 +29,8 @@ public class PlayerController : MonoBehaviour
     static readonly int JumpAnimation = Animator.StringToHash("jump");
     static readonly int RunAnimation = Animator.StringToHash("run");
     bool run = true;
-    float _direction;
+    int reference;
+    int _direction = 1;
     [SerializeField] LayerMask groundLayer;
 
     public delegate void GameDelegate();
@@ -113,7 +116,9 @@ public class PlayerController : MonoBehaviour
 
     void FlipPlayer(int direction)
     {
-        if (direction == -1)
+        _direction = direction;
+
+        if (_direction == -1)
         {
             slashOrigin.position = new Vector2(-1.3f, 0);
             spr.flipX = true;
@@ -159,7 +164,7 @@ public class PlayerController : MonoBehaviour
             {
                 if (obj.ProjectileType == Projectile.Type.bullet)
                 {
-                    obj.Parry();
+                    obj.Parry(_direction);
                 }
                 else
                 {
@@ -172,7 +177,7 @@ public class PlayerController : MonoBehaviour
 
                 if (obj2.ProjectileType == ProjectileInverse.Type.bullet)
                 {
-                    obj2.Parry();
+                    obj2.Parry(_direction);
                 }
                 else
                 {
@@ -184,7 +189,8 @@ public class PlayerController : MonoBehaviour
 
     RaycastHit2D CheckSlashRadius()
     {
-        return Physics2D.CircleCast(slashOrigin.transform.position, .7f, slashDirection, 0, projectileLayer);
+        //slashOrigin.
+        return Physics2D.CircleCast(transform.position, 2f, Vector2.zero, 0, projectileLayer);
     }
 
     IEnumerator PlayAttackAnimation()
@@ -217,7 +223,21 @@ public class PlayerController : MonoBehaviour
 
     void Proceed()
     {
-        StartCoroutine(MoveToNextSegment(17));
+        reference ++;
+
+        if (reference == 1)
+        {
+            StartCoroutine(MoveToNextSegment(10));
+        }
+        else if (reference == 2)
+        {
+            StartCoroutine(MoveToNextSegment(33));
+        }
+        else if (reference == 3)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        }
+
     }
 
     IEnumerator MoveToNextSegment(float targetPosition)

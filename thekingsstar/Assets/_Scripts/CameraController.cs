@@ -8,6 +8,7 @@ public class CameraController : MonoBehaviour
     float lerpDuration = .5f;
     float timerRef = 0;
     Vector3 startPosition, endPosition;
+    int reference = 0;
 
     private void OnEnable()
     {
@@ -23,7 +24,10 @@ public class CameraController : MonoBehaviour
     {
         lerping = true;
         startPosition = transform.position;
-        endPosition = startPosition + new Vector3(17, 0);
+        reference += 17;
+        Debug.Log("lerp set to true, moving camera to = " + reference);
+        endPosition = new Vector3(reference, startPosition.y, startPosition.z);
+        Debug.Log("end position x = " + endPosition.x);
         
     }
 
@@ -48,6 +52,8 @@ public class CameraController : MonoBehaviour
         {
             lerping = false;
             timerRef = 0;
+
+            Debug.Log("lerp complete, camera is at = " + transform.position.x);
         }
     }
 }

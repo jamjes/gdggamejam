@@ -27,7 +27,7 @@ public class ProjectileInverse : MonoBehaviour, IDamageable
         speed = Random.Range(8, 13);
         _spr = GetComponent<SpriteRenderer>();
 
-        int randomInt = Random.Range(0, 2);
+        int randomInt = Random.Range(0, 1);
 
         if (randomInt == 0)
         {
@@ -67,10 +67,10 @@ public class ProjectileInverse : MonoBehaviour, IDamageable
         Destroy(gameObject);
     }
 
-    public void Parry()
+    public void Parry(int direction)
     {
         speed *= 1.5f;
-        _direction *= -1;
+        _direction = direction;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
