@@ -10,6 +10,9 @@ public class Projectile : MonoBehaviour, IDamageable
     [SerializeField] Sprite idleSprite, motionSprite;
     SpriteRenderer _spr;
 
+    public delegate void GameDelegate();
+    public static event GameDelegate OnDeathEnter;
+
     private void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
@@ -38,5 +41,13 @@ public class Projectile : MonoBehaviour, IDamageable
     public void Damage()
     {
         Destroy(gameObject);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "Player" && OnDeathEnter != null)
+        {
+            OnDeathEnter();
+        }
     }
 }

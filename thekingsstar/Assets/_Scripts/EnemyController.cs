@@ -16,9 +16,32 @@ public class EnemyController : MonoBehaviour
 
     [SerializeField] Animator anim;
     bool isAttacking = false;
+    bool run = true;
+
+
+    private void OnEnable()
+    {
+        Projectile.OnDeathEnter += End;
+    }
+
+    private void OnDisable()
+    {
+        Projectile.OnDeathEnter -= End;
+    }
+
+    void End()
+    {
+        run = false;
+    }
 
     private void Update()
     {
+        if (!run)
+        {
+            StopAllCoroutines();
+            return;
+        }
+        
         timeRef += Time.deltaTime;
 
         if (isAttacking == false)

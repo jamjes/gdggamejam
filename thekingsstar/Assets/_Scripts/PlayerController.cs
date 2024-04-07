@@ -10,6 +10,18 @@ public class PlayerController : MonoBehaviour
     bool isAttacking = false;
     static readonly int SlashAnimation = Animator.StringToHash("slash");
     static readonly int IdleAnimation = Animator.StringToHash("idle");
+    static readonly int DeathAnimation = Animator.StringToHash("death");
+    bool run = true;
+
+    private void OnEnable()
+    {
+        Projectile.OnDeathEnter += Death;
+    }
+
+    private void OnDisable()
+    {
+        Projectile.OnDeathEnter -= Death;
+    }
 
     private void Start()
     {
@@ -18,6 +30,11 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (!run)
+        {
+            return;
+        }
+
         if (!isAttacking)
         {
             anim.CrossFade(IdleAnimation, 0, 0);
@@ -61,5 +78,12 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(.3f);
         isAttacking = false;
 
+    }
+
+    void Death()
+    {
+        StopAllCoroutines();
+        run = false;
+        anim.CrossFade(DeathAnimation, 0, 0);
     }
 }
