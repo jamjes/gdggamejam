@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Door : MonoBehaviour
@@ -9,6 +10,7 @@ public class Door : MonoBehaviour
 
     public delegate void GameDelegate();
     public static event GameDelegate OnGameWin;
+    public TextMeshProUGUI healthLabel;
 
     private void Start()
     {
@@ -18,6 +20,7 @@ public class Door : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         health--;
+        healthLabel.text = health.ToString();
         Destroy(collision.gameObject);
 
         if (health == 0 && OnGameWin != null)

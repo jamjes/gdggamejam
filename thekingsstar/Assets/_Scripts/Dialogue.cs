@@ -98,6 +98,7 @@ public class Dialogue : MonoBehaviour
             }
             else
             {
+                StopAllCoroutines();
                 endText.gameObject.SetActive(true);
                 Destroy(gameObject);
             }
