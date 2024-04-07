@@ -1,4 +1,3 @@
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour, IDamageable
@@ -27,7 +26,7 @@ public class Projectile : MonoBehaviour, IDamageable
         speed = Random.Range(8, 13);
         _spr = GetComponent<SpriteRenderer>();
 
-        int randomInt = Random.Range(0, 1);
+        int randomInt = Random.Range(0, 2);
 
         if (randomInt == 0)
         {
