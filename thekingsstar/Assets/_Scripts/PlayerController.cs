@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -91,7 +92,16 @@ public class PlayerController : MonoBehaviour
 
         if (slashRadius.collider != null)
         {
-            slashRadius.collider.gameObject.GetComponent<Projectile>().Parry();
+            Projectile obj = slashRadius.collider.gameObject.GetComponent<Projectile>();
+
+            if (obj.ProjectileType == Projectile.Type.bullet)
+            {
+                obj.Parry();
+            }
+            else
+            {
+                obj.Damage();
+            }
         }
     }
 
@@ -109,19 +119,9 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    private void FixedUpdate()
-    {
-        if (!canMove)
-        {
-            return;
-        }
-
-        _rb.velocity = new Vector2(_direction * 5, _rb.velocity.y);
-    }
-
     void Jump()
     {
-        _rb.velocity = new Vector2(_rb.velocity.x, 12);
+        _rb.velocity = new Vector2(_rb.velocity.x, 9);
     }
 
     void Death()

@@ -7,6 +7,14 @@ public class Projectile : MonoBehaviour, IDamageable
     float speed;
     int _direction = -1;
 
+    public enum Type
+    {
+        bullet,
+        bomb
+    };
+
+    public Type ProjectileType;
+
     [SerializeField] Sprite idleSprite, motionSprite;
     SpriteRenderer _spr;
 
@@ -18,6 +26,19 @@ public class Projectile : MonoBehaviour, IDamageable
         _rb = GetComponent<Rigidbody2D>();
         speed = Random.Range(8, 13);
         _spr = GetComponent<SpriteRenderer>();
+
+        int randomInt = Random.Range(0, 2);
+
+        if (randomInt == 0)
+        {
+            ProjectileType = Type.bullet;
+        }
+        else
+        {
+            ProjectileType = Type.bomb;
+            _spr.color = Color.red;
+        }
+
     }
 
     void Update()
@@ -40,7 +61,10 @@ public class Projectile : MonoBehaviour, IDamageable
 
     public void Damage()
     {
-        
+        _direction = 0;
+        speed = 0;
+        OnDeathEnter();
+        Destroy(gameObject);
     }
 
     public void Parry()
