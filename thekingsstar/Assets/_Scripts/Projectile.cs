@@ -3,7 +3,8 @@ using UnityEngine;
 public class Projectile : MonoBehaviour, IDamageable
 {
     Rigidbody2D _rb;
-    int speed;
+    float speed;
+    float yEffector;
 
     [SerializeField] Sprite idleSprite, motionSprite;
     SpriteRenderer _spr;
@@ -33,12 +34,14 @@ public class Projectile : MonoBehaviour, IDamageable
 
     private void FixedUpdate()
     {
-        _rb.velocity = new Vector2(-speed, 0);
+        _rb.velocity = new Vector2(-speed, yEffector);
     }
 
     public void Damage()
     {
-        Destroy(gameObject);
+        speed *= -1.5f;
+        yEffector = Random.Range(-2, 3);
+        Debug.Log(yEffector);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -46,7 +49,7 @@ public class Projectile : MonoBehaviour, IDamageable
         if (collision.tag == "Player" && OnDeathEnter != null)
         {
             OnDeathEnter();
-            Damage();
+            Destroy(gameObject);
         }
     }
 }
