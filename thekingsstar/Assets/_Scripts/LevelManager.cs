@@ -1,22 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
-    void Update()
+    public void NextScene()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            NextScene();
-        }
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
-    void NextScene()
+    public void ReloadScene()
     {
-        //Coroutine FadeOut
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    public void PreviousScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
 }

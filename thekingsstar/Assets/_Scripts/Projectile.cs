@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour, IDamageable
@@ -48,6 +46,7 @@ public class Projectile : MonoBehaviour, IDamageable
         if (collision.tag == "Player" && OnDeathEnter != null)
         {
             OnDeathEnter();
+            Damage();
         }
     }
 }
