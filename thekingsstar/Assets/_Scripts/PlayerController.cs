@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Diagnostics;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
@@ -24,11 +25,13 @@ public class PlayerController : MonoBehaviour
     private void OnEnable()
     {
         Projectile.OnDeathEnter += Death;
+        Door.OnGameWin += Proceed;
     }
 
     private void OnDisable()
     {
         Projectile.OnDeathEnter -= Death;
+        Door.OnGameWin -= Proceed;
     }
 
     private void Start()
@@ -75,6 +78,16 @@ public class PlayerController : MonoBehaviour
                 Jump();
             }
         }
+    }
+
+    private void FixedUpdate()
+    {
+        if (!canMove)
+        {
+            return;
+        }
+
+        _rb.velocity = new Vector2(6, _rb.velocity.y);
     }
 
     void Slash()
@@ -137,5 +150,18 @@ public class PlayerController : MonoBehaviour
     {
         RaycastHit2D hit = Physics2D.BoxCast(_col.bounds.center, _col.bounds.size, 0, Vector2.down, .2f, groundLayer);
         return hit.collider != null;
+    }
+
+    void Proceed()
+    {
+        StartCoroutine(MoveToNextSegment(10));
+    }
+
+    IEnumerator MoveToNextSegment(float targetPosition)
+    {
+        canMove = true;
+        canAttack = false;
+        canJump = false;
+        yield return new WaitUntil(() => transform.position.x >= targetPosition);
     }
 }

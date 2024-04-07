@@ -31,11 +31,13 @@ public class EnemyController : MonoBehaviour
     private void OnEnable()
     {
         Projectile.OnDeathEnter += End;
+        Door.OnGameWin += End;
     }
 
     private void OnDisable()
     {
         Projectile.OnDeathEnter -= End;
+        Door.OnGameWin -= End;
     }
 
     void End()
