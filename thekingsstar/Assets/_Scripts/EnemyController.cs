@@ -1,14 +1,25 @@
 using System.Collections;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
+    public enum State
+    {
+        idle, activate, shoot, deactivate
+    };
+    
+    public State CurrentState;
+    
     [SerializeField] GameObject projectile;
     float interval = 3;
     float timeRef;
 
     static readonly int IdleAnimation = Animator.StringToHash("idle");
+    static readonly int ActivateAnimation = Animator.StringToHash("activate");
     static readonly int AttackAnimation = Animator.StringToHash("attack");
+    static readonly int DeactivateAnimation = Animator.StringToHash("deactivate");
 
     [SerializeField] Transform spawnPoint;
 
@@ -32,6 +43,11 @@ public class EnemyController : MonoBehaviour
         run = false;
     }
 
+    private void Start()
+    {
+        CurrentState = State.idle;
+    }
+
     private void Update()
     {
         if (!run)
@@ -39,18 +55,18 @@ public class EnemyController : MonoBehaviour
             StopAllCoroutines();
             return;
         }
+
+        StateUpdate();
         
         timeRef += Time.deltaTime;
 
-        if (isAttacking == false)
+        if (isAttacking == false && CurrentState != State.idle)
         {
-            anim.CrossFade(IdleAnimation, 0, 0);
+            CurrentState = State.idle;
         }
 
         if (timeRef >= interval)
         {
-            SpawnProjectile();
-
             interval = Random.Range(3, 7);
             timeRef = 0;
             StartCoroutine(ShootCoroutine());
@@ -63,10 +79,36 @@ public class EnemyController : MonoBehaviour
     }
 
     IEnumerator ShootCoroutine()
-    {
+    {   
         isAttacking = true;
-        anim.CrossFade(AttackAnimation, 0, 0);
+        
+        CurrentState = State.activate;
         yield return new WaitForSeconds(.5f);
+        CurrentState = State.shoot;
+        SpawnProjectile();
+        yield return new WaitForSeconds(.3f);
+        CurrentState = State.deactivate;
+        yield return new WaitForSeconds(.5f);
+        
         isAttacking = false;
+    }
+
+    void StateUpdate()
+    {
+        switch (CurrentState)
+        {
+            case State.idle:
+                anim.CrossFade(IdleAnimation,0,0);
+                break;
+            case State.activate:
+                anim.CrossFade(ActivateAnimation, 0, 0);
+                break;
+            case State.shoot:
+                anim.CrossFade(AttackAnimation, 0, 0);
+                break;
+            case State.deactivate:
+                anim.CrossFade(DeactivateAnimation, 0, 0);
+                break;
+        }
     }
 }

@@ -1,10 +1,11 @@
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour, IDamageable
 {
     Rigidbody2D _rb;
     float speed;
-    float yEffector;
+    int _direction = -1;
 
     [SerializeField] Sprite idleSprite, motionSprite;
     SpriteRenderer _spr;
@@ -15,7 +16,7 @@ public class Projectile : MonoBehaviour, IDamageable
     private void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
-        speed = Random.Range(8, 11);
+        speed = Random.Range(8, 13);
         _spr = GetComponent<SpriteRenderer>();
     }
 
@@ -34,14 +35,18 @@ public class Projectile : MonoBehaviour, IDamageable
 
     private void FixedUpdate()
     {
-        _rb.velocity = new Vector2(-speed, yEffector);
+        _rb.velocity = new Vector2(_direction * speed, 0);
     }
 
     public void Damage()
     {
-        speed *= -1.5f;
-        yEffector = Random.Range(-2, 3);
-        Debug.Log(yEffector);
+        
+    }
+
+    public void Parry()
+    {
+        speed *= 1.5f;
+        _direction = 1;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

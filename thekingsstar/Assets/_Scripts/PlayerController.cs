@@ -91,7 +91,7 @@ public class PlayerController : MonoBehaviour
 
         if (slashRadius.collider != null)
         {
-            slashRadius.collider.gameObject.GetComponent<Projectile>().Damage();
+            slashRadius.collider.gameObject.GetComponent<Projectile>().Parry();
         }
     }
 
