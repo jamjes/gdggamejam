@@ -31,6 +31,9 @@ public class PlayerController : MonoBehaviour
     float _direction;
     [SerializeField] LayerMask groundLayer;
 
+    public delegate void GameDelegate();
+    public static event GameDelegate OnMoveEnd;
+
 
     public bool canMove, canAttack, canJump;
 
@@ -168,7 +171,7 @@ public class PlayerController : MonoBehaviour
 
     void Proceed()
     {
-        StartCoroutine(MoveToNextSegment(7.4f));
+        StartCoroutine(MoveToNextSegment(17));
     }
 
     IEnumerator MoveToNextSegment(float targetPosition)
@@ -176,10 +179,21 @@ public class PlayerController : MonoBehaviour
         canMove = true;
         canAttack = false;
         canJump = false;
+        yield return new WaitUntil(() => transform.position.x >= (targetPosition / 2));
+
+        if (OnMoveEnd != null)
+        {
+            OnMoveEnd();
+        }
+
         yield return new WaitUntil(() => transform.position.x >= targetPosition);
+
         canMove = false;
         canAttack = true;
         canJump = true;
+
+        
+
     }
 
     void StateUpdate()
