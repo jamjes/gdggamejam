@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-//using System.Diagnostics;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -16,7 +15,7 @@ public class PlayerController : MonoBehaviour
 
     public State CurrentState;
     [SerializeField] Transform slashOrigin;
-    
+    [SerializeField] SpriteRenderer spr;
     BoxCollider2D _col;
     [SerializeField] LayerMask projectileLayer;
     Rigidbody2D _rb;
@@ -34,18 +33,22 @@ public class PlayerController : MonoBehaviour
     public delegate void GameDelegate();
     public static event GameDelegate OnMoveEnd;
 
+    Vector3 slashDirection = Vector2.right;
+
 
     public bool canMove, canAttack, canJump;
 
     private void OnEnable()
     {
         Projectile.OnDeathEnter += Death;
+        ProjectileInverse.OnDeathEnter += Death;
         Door.OnGameWin += Proceed;
     }
 
     private void OnDisable()
     {
         Projectile.OnDeathEnter -= Death;
+        ProjectileInverse.OnDeathEnter -= Death;
         Door.OnGameWin -= Proceed;
     }
 
@@ -97,6 +100,33 @@ public class PlayerController : MonoBehaviour
                 Jump();
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            FlipPlayer(-1);
+        }
+        else if (Input.GetKeyDown(KeyCode.D))
+        {
+            FlipPlayer(1);
+        }
+    }
+
+    void FlipPlayer(int direction)
+    {
+        if (direction == -1)
+        {
+            slashOrigin.position = new Vector2(-1.3f, 0);
+            spr.flipX = true;
+            slashDirection = Vector2.left;
+        }
+        else
+        {
+            slashOrigin.position = new Vector2(1.3f, 0);
+            spr.flipX = false;
+            slashDirection = Vector2.right;
+        }
+        
+        
     }
 
     private void FixedUpdate()
@@ -125,20 +155,36 @@ public class PlayerController : MonoBehaviour
         {
             Projectile obj = slashRadius.collider.gameObject.GetComponent<Projectile>();
 
-            if (obj.ProjectileType == Projectile.Type.bullet)
+            if (obj != null)
             {
-                obj.Parry();
+                if (obj.ProjectileType == Projectile.Type.bullet)
+                {
+                    obj.Parry();
+                }
+                else
+                {
+                    obj.Damage();
+                }
             }
             else
             {
-                obj.Damage();
+                ProjectileInverse obj2 = slashRadius.collider.gameObject.GetComponent<ProjectileInverse>();
+
+                if (obj2.ProjectileType == ProjectileInverse.Type.bullet)
+                {
+                    obj2.Parry();
+                }
+                else
+                {
+                    obj2.Damage();
+                }
             }
         }
     }
 
     RaycastHit2D CheckSlashRadius()
     {
-        return Physics2D.CircleCast(slashOrigin.transform.position, .7f, Vector2.right, 0, projectileLayer);
+        return Physics2D.CircleCast(slashOrigin.transform.position, .7f, slashDirection, 0, projectileLayer);
     }
 
     IEnumerator PlayAttackAnimation()
@@ -191,9 +237,6 @@ public class PlayerController : MonoBehaviour
         canMove = false;
         canAttack = true;
         canJump = true;
-
-        
-
     }
 
     void StateUpdate()

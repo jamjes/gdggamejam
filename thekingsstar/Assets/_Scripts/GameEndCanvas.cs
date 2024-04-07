@@ -7,11 +7,13 @@ public class GameEndCanvas : MonoBehaviour
     private void OnEnable()
     {
         Projectile.OnDeathEnter += DisplayUI;
+        ProjectileInverse.OnDeathEnter += DisplayUI;
     }
 
     private void OnDisable()
     {
         Projectile.OnDeathEnter -= DisplayUI;
+        ProjectileInverse.OnDeathEnter -= DisplayUI;
     }
 
     void Start()

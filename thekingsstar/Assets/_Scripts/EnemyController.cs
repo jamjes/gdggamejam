@@ -13,8 +13,10 @@ public class EnemyController : MonoBehaviour
     public State CurrentState;
     
     [SerializeField] GameObject projectile;
-    float interval = 3;
+    public float interval = 3;
     float timeRef;
+
+    public float beginDelay;
 
     static readonly int IdleAnimation = Animator.StringToHash("idle");
     static readonly int ActivateAnimation = Animator.StringToHash("activate");
@@ -25,18 +27,22 @@ public class EnemyController : MonoBehaviour
 
     [SerializeField] Animator anim;
     bool isAttacking = false;
-    bool run = true;
+    public bool run = false;
+
+    //public int direction;
 
 
     private void OnEnable()
     {
         Projectile.OnDeathEnter += End;
+        ProjectileInverse.OnDeathEnter += End;
         Door.OnGameWin += End;
     }
 
     private void OnDisable()
     {
         Projectile.OnDeathEnter -= End;
+        ProjectileInverse.OnDeathEnter -= End;
         Door.OnGameWin -= End;
     }
 
@@ -48,6 +54,17 @@ public class EnemyController : MonoBehaviour
     private void Start()
     {
         CurrentState = State.idle;
+    }
+
+    public void Begin()
+    {
+        StartCoroutine(DelayedBegin());
+    }
+
+    IEnumerator DelayedBegin()
+    {
+        yield return new WaitForSeconds(beginDelay);
+        run = true;
     }
 
     private void Update()
@@ -69,7 +86,7 @@ public class EnemyController : MonoBehaviour
 
         if (timeRef >= interval)
         {
-            interval = Random.Range(3, 7);
+            interval = Random.Range(3, 6);
             timeRef = 0;
             StartCoroutine(ShootCoroutine());
         }
@@ -77,7 +94,7 @@ public class EnemyController : MonoBehaviour
 
     void SpawnProjectile()
     {
-        Instantiate(projectile, spawnPoint.position, Quaternion.identity);
+        GameObject bullet = Instantiate(projectile, spawnPoint.position, Quaternion.identity);
     }
 
     IEnumerator ShootCoroutine()

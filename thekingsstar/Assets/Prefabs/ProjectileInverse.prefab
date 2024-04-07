@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 2848723766600293230}
   - component: {fileID: 2813232812110510771}
   - component: {fileID: 4247652485609049619}
-  - component: {fileID: 9059073563528972442}
+  - component: {fileID: -7683549287418350985}
   m_Layer: 6
-  m_Name: Projectile
+  m_Name: ProjectileInverse
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -149,7 +149,7 @@ CapsuleCollider2D:
   m_Offset: {x: 0.24709234, y: -0.0015846315}
   m_Size: {x: 0.645385, y: 0.261786}
   m_Direction: 1
---- !u!114 &9059073563528972442
+--- !u!114 &-7683549287418350985
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -158,7 +158,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6960180757663427623}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1aa5bdc9a2156e4f84ad30f180c1807, type: 3}
+  m_Script: {fileID: 11500000, guid: 3c0d289115e983446979b44a11039f15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ProjectileType: 0

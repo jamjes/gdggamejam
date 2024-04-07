@@ -1,11 +1,11 @@
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-public class Projectile : MonoBehaviour, IDamageable
+public class ProjectileInverse : MonoBehaviour, IDamageable
 {
     Rigidbody2D _rb;
     float speed;
-    int _direction = -1;
+    int _direction = 1;
 
     public enum Type
     {
@@ -77,6 +77,7 @@ public class Projectile : MonoBehaviour, IDamageable
     {
         if (collision.tag == "Player" && OnDeathEnter != null)
         {
+            Debug.Log("Collision with Player");
             OnDeathEnter();
             Destroy(gameObject);
         }
