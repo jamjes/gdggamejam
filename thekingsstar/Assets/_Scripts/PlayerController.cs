@@ -1,12 +1,22 @@
 using System.Collections;
-using System.Diagnostics;
-using Unity.VisualScripting;
-using UnityEditor;
-using UnityEditor.Experimental.GraphView;
+using System.Collections.Generic;
+//using System.Diagnostics;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public enum State
+    {
+        idle,
+        slash,
+        jump,
+        run,
+        death
+    };
+
+    public State CurrentState;
+    [SerializeField] Transform slashOrigin;
+    
     BoxCollider2D _col;
     [SerializeField] LayerMask projectileLayer;
     Rigidbody2D _rb;
@@ -15,6 +25,8 @@ public class PlayerController : MonoBehaviour
     static readonly int SlashAnimation = Animator.StringToHash("slash");
     static readonly int IdleAnimation = Animator.StringToHash("idle");
     static readonly int DeathAnimation = Animator.StringToHash("death");
+    static readonly int JumpAnimation = Animator.StringToHash("jump");
+    static readonly int RunAnimation = Animator.StringToHash("run");
     bool run = true;
     float _direction;
     [SerializeField] LayerMask groundLayer;
@@ -38,6 +50,7 @@ public class PlayerController : MonoBehaviour
     {
         _col = GetComponent<BoxCollider2D>();
         _rb = GetComponent<Rigidbody2D>();
+        CurrentState = State.idle;
     }
 
     private void Update()
@@ -47,28 +60,31 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        if (!isAttacking)
+        StateUpdate();
+
+        if (!isAttacking && IsGrounded())
         {
-            anim.CrossFade(IdleAnimation, 0, 0);
+            if (_rb.velocity.x == 0)
+            {
+                CurrentState = State.idle;
+            }
+            else
+            {
+                CurrentState = State.run;
+            }
+
+            
+        }
+        else if (!isAttacking && !IsGrounded())
+        {
+            CurrentState = State.jump;
         }
         
         
         if (Input.GetKeyDown(KeyCode.J))
         {
             Slash();
-        }
-
-        if (Input.GetKey(KeyCode.A))
-        {
-            _direction = -1;
-        }
-        else if (Input.GetKey(KeyCode.D))
-        {
-            _direction = 1;
-        }
-        else
-        {
-            _direction = 0;
+            CurrentState = State.slash;
         }
 
         if (Input.GetKeyDown(KeyCode.W))
@@ -87,7 +103,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        _rb.velocity = new Vector2(6, _rb.velocity.y);
+        _rb.velocity = new Vector2(4, _rb.velocity.y);
     }
 
     void Slash()
@@ -97,7 +113,6 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        
         StopAllCoroutines();
         StartCoroutine(PlayAttackAnimation());
 
@@ -120,13 +135,12 @@ public class PlayerController : MonoBehaviour
 
     RaycastHit2D CheckSlashRadius()
     {
-        return Physics2D.CircleCast(_col.bounds.center, 2, Vector2.right, 0, projectileLayer);
+        return Physics2D.CircleCast(slashOrigin.transform.position, .7f, Vector2.right, 0, projectileLayer);
     }
 
     IEnumerator PlayAttackAnimation()
     {
         isAttacking = true;
-        anim.CrossFade(SlashAnimation, 0, 0);
         yield return new WaitForSeconds(.3f);
         isAttacking = false;
 
@@ -141,7 +155,7 @@ public class PlayerController : MonoBehaviour
     {
         StopAllCoroutines();
         run = false;
-        anim.CrossFade(DeathAnimation, 0, 0);
+        CurrentState = State.death;
         _direction = 0;
         _rb.velocity = Vector2.zero;
     }
@@ -154,7 +168,7 @@ public class PlayerController : MonoBehaviour
 
     void Proceed()
     {
-        StartCoroutine(MoveToNextSegment(10));
+        StartCoroutine(MoveToNextSegment(7.4f));
     }
 
     IEnumerator MoveToNextSegment(float targetPosition)
@@ -163,5 +177,30 @@ public class PlayerController : MonoBehaviour
         canAttack = false;
         canJump = false;
         yield return new WaitUntil(() => transform.position.x >= targetPosition);
+        canMove = false;
+        canAttack = true;
+        canJump = true;
+    }
+
+    void StateUpdate()
+    {
+        switch (CurrentState)
+        {
+            case State.idle:
+                anim.CrossFade(IdleAnimation, 0, 0);
+                break;
+            case State.slash:
+                anim.CrossFade(SlashAnimation, 0, 0);
+                break;
+            case State.jump:
+                anim.CrossFade(JumpAnimation, 0, 0);
+                break;
+            case State.run:
+                anim.CrossFade(RunAnimation, 0, 0);
+                break;
+            case State.death:
+                anim.CrossFade(DeathAnimation, 0, 0);
+                break;
+        }
     }
 }
