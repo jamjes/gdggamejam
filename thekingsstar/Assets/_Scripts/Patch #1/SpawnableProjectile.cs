@@ -21,7 +21,7 @@ public class SpawnableProjectile : MonoBehaviour, IDamageable
     [Range(3, 7)] public int Speed = 4;
     [Range(1, 3)] public int Power = 1;
 
-    int _direction = 1;
+    int _direction = 0;
     float _minSpeed = 2, _maxSpeed = 7;
 
     public void Configure()
@@ -38,14 +38,14 @@ public class SpawnableProjectile : MonoBehaviour, IDamageable
 
         _minSpeed = Speed - 2;
         _maxSpeed = Speed + 3;
-        Speed = (int)_maxSpeed;
     }
 
-    public void Configure(int speed, int power, int direction)
+    public void Configure(int speed, int power, int direction, ProjectileType type)
     {
         Speed = speed;
         Power = power;
         _direction = direction;
+        Type = type;
         Configure();
     }
 
