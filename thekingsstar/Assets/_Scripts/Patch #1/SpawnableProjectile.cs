@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SpawnableProjectile : MonoBehaviour
@@ -18,30 +15,18 @@ public class SpawnableProjectile : MonoBehaviour
 
     [Header("Physics Settings")]
     [SerializeField] Rigidbody2D _rb;
-    int _speed = 4;
-    float _minSpeed = 2, _maxSpeed = 7;
+    float _speed;
     int _power = 1;
     int _direction = 0;
     
     public void Configure(int speed, int power, int direction)
     {
-        //set speed equal to random betwee min and max range
-        _speed = speed;
+        float minSpeed = speed - 1;
+        float maxSpeed = speed + 2;
+        _speed = Random.Range(minSpeed, maxSpeed);
+        
         _power = power;
         _direction = direction;
-
-        switch (_type)
-        {
-            case ProjectileType.Bullet:
-                _spr.color = Color.white;
-                break;
-            case ProjectileType.Bomb:
-                _spr.color = Color.red;
-                break;
-        }
-
-        _minSpeed = _speed - 2;
-        _maxSpeed = _speed + 3;
     }
 
     void Update()
@@ -68,5 +53,13 @@ public class SpawnableProjectile : MonoBehaviour
     void FixedUpdate()
     {
         _rb.velocity = new Vector2(_direction * _speed, _rb.velocity.y);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Killzone"))
+        {
+            Destroy(gameObject);
+        }
     }
 }

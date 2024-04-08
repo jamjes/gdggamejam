@@ -59,7 +59,6 @@ public class EnemyTurret : MonoBehaviour
 
     void Init()
     {
-        Debug.Log($"{gameObject.name} has been scheduled to start after delay!");
         StartCoroutine(DelayedStart(_startDelay));
     }
 
@@ -67,17 +66,17 @@ public class EnemyTurret : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         _run = true;
-        Debug.Log($"Delay complete. {gameObject.name} is enabled!");
         Deploy();
     }
 
     void Deploy()
     {
-        //Randomly switch between projectiles by random int between 0 and 1.
-        GameObject obj = Instantiate(Projectiles[0], transform.position, Quaternion.identity);
-
-        int direction;
+        //activate speed .5 seconds
+        //attack speed .4 seconds
+        //deactivate speed .5 seconds
         
+        int direction;
+
         if (_spr.flipX)
         {
             direction = -1;
@@ -87,9 +86,11 @@ public class EnemyTurret : MonoBehaviour
             direction = 1;
         }
 
+        int index = Random.Range(0, Projectiles.Length);
+        GameObject obj = Instantiate(Projectiles[index], transform.position, Quaternion.identity);
         obj.transform.parent = transform;
-
         obj.GetComponent<SpawnableProjectile>().Configure(Speed,Power,direction);
+
     }
 
     void Update()
