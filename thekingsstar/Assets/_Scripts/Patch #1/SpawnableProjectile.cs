@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpawnableProjectile : MonoBehaviour, IDamageable
+public class SpawnableProjectile : MonoBehaviour
 {
     public enum ProjectileType
     {
@@ -11,15 +11,15 @@ public class SpawnableProjectile : MonoBehaviour, IDamageable
     };
     
     [Header("Main Settings")]
-    public ProjectileType Type;
-    public Sprite StaticSprite, DynamicSprite;
-    public SpriteRenderer Spr;
+    [SerializeField] Sprite _staticSprite, _dynamicSprite;
+    public ProjectileType Type { private set; get; }
+    [SerializeField] SpriteRenderer _spr;
 
 
     [Header("Physics Settings")]
-    public Rigidbody2D Rb;
-    [Range(3, 7)] public int Speed = 4;
-    [Range(1, 3)] public int Power = 1;
+    [SerializeField] Rigidbody2D _rb;
+    [Range(3, 7)] int _speed = 4;
+    [Range(1, 3)] int _power = 1;
 
     int _direction = 0;
     float _minSpeed = 2, _maxSpeed = 7;
@@ -29,21 +29,21 @@ public class SpawnableProjectile : MonoBehaviour, IDamageable
         switch(Type)
         {
             case ProjectileType.Bullet:
-                Spr.color = Color.white;
+                _spr.color = Color.white;
                 break;
             case ProjectileType.Bomb:
-                Spr.color = Color.red;
+                _spr.color = Color.red;
                 break;
         }
 
-        _minSpeed = Speed - 2;
-        _maxSpeed = Speed + 3;
+        _minSpeed = _speed - 2;
+        _maxSpeed = _speed + 3;
     }
 
     public void Configure(int speed, int power, int direction, ProjectileType type)
     {
-        Speed = speed;
-        Power = power;
+        _speed = speed;
+        _power = power;
         _direction = direction;
         Type = type;
         Configure();
@@ -51,37 +51,27 @@ public class SpawnableProjectile : MonoBehaviour, IDamageable
 
     void Update()
     {
-        if (Rb.velocity.x != 0 && Spr.sprite != DynamicSprite)
+        if (_rb.velocity.x != 0 && _spr.sprite != _dynamicSprite)
         {
-            Spr.sprite = DynamicSprite;
+            _spr.sprite = _dynamicSprite;
         }
-        else if (Rb.velocity.x != 0 && Spr.sprite != StaticSprite)
+        else if (_rb.velocity.x == 0 && _spr.sprite != _staticSprite)
         {
-            Spr.sprite = DynamicSprite;
+            _spr.sprite = _staticSprite;
         }
 
-        if (_direction == -1 && Spr.flipX == false)
+        if (_direction == -1 && _spr.flipX == false)
         {
-            Spr.flipX = true;
+            _spr.flipX = true;
         }
-        else if (_direction == 1 && Spr.flipX == true)
+        else if (_direction == 1 && _spr.flipX == true)
         {
-            Spr.flipX = false;
+            _spr.flipX = false;
         }
     }
 
     void FixedUpdate()
     {
-        Rb.velocity = new Vector2(_direction * Speed, Rb.velocity.y);
-    }
-
-    void IDamageable.Damage()
-    {
-        Debug.Log("Damage Interface Call Recieved");
-    }
-
-    public void Parry(int direction)
-    {
-        Debug.Log("Parry Interface Call Recieved");
+        _rb.velocity = new Vector2(_direction * _speed, _rb.velocity.y);
     }
 }
