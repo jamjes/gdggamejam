@@ -6,13 +6,16 @@ using UnityEngine;
 
 public class EnemyTurret : MonoBehaviour
 {
-    public bool Run;
-    
-    public GameObject[] Projectiles;
-    [Range(3,6)] [SerializeField] float StartDelay = 3;
-    [Range(1,5)] [SerializeField] float ReloadSpeed = 5;
-    public SpriteRenderer Spr;
+    [Header("Projectile Settings")]
+    [Range(3, 7)] public int Speed;
+    [Range(1, 3)] public int Power;
 
+    [Header("Turret Settings")]
+    bool _run = false;
+    public GameObject[] Projectiles;
+    [Range(3,6)] [SerializeField] float _startDelay = 3;
+    [Range(1,5)] [SerializeField] float _reloadSpeed = 5;
+    [SerializeField] SpriteRenderer _spr;
     float timerRef;
 
 
@@ -23,7 +26,7 @@ public class EnemyTurret : MonoBehaviour
         if (Projectiles.Length == 0)
         {
             Debug.LogError($"{nameSelf} Disabled! Projectiles list is empty");
-            Run = false;
+            _run = false;
             return;
         }
 
@@ -32,13 +35,13 @@ public class EnemyTurret : MonoBehaviour
             if (obj == null)
             {
                 Debug.LogError($"{nameSelf} Disabled! Unassigned value in Projectile List");
-                Run = false;
+                _run = false;
                 return;
             }
             else if (obj.GetComponent<SpawnableProjectile>() == null)
             {
                 Debug.LogError($"{nameSelf} Disabled! Invalid object in Projectile List");
-                Run = false;
+                _run = false;
                 return;
             }
         }
@@ -49,32 +52,33 @@ public class EnemyTurret : MonoBehaviour
 
     public void EnableTurret(float startDelay, float reloadSpeed)
     {
-        StartDelay = startDelay;
-        ReloadSpeed = reloadSpeed;
+        _startDelay = startDelay;
+        _reloadSpeed = reloadSpeed;
         Init();
     }
 
     void Init()
     {
         Debug.Log($"{gameObject.name} has been scheduled to start after delay!");
-        StartCoroutine(DelayedStart(StartDelay));
+        StartCoroutine(DelayedStart(_startDelay));
     }
 
     IEnumerator DelayedStart(float delay)
     {
         yield return new WaitForSeconds(delay);
-        Run = true;
+        _run = true;
         Debug.Log($"Delay complete. {gameObject.name} is enabled!");
         Deploy();
     }
 
     void Deploy()
     {
+        //Randomly switch between projectiles by random int between 0 and 1.
         GameObject obj = Instantiate(Projectiles[0], transform.position, Quaternion.identity);
 
         int direction;
         
-        if (Spr.flipX)
+        if (_spr.flipX)
         {
             direction = -1;
         }
@@ -85,19 +89,19 @@ public class EnemyTurret : MonoBehaviour
 
         obj.transform.parent = transform;
 
-        obj.GetComponent<SpawnableProjectile>().Configure(7,1,direction, SpawnableProjectile.ProjectileType.Bomb);
+        obj.GetComponent<SpawnableProjectile>().Configure(Speed,Power,direction);
     }
 
     void Update()
     {
-        if (!Run)
+        if (!_run)
         {
             return;
         }
 
         timerRef += Time.deltaTime;
 
-        if (timerRef >= ReloadSpeed)
+        if (timerRef >= _reloadSpeed)
         {
             Deploy();
 
