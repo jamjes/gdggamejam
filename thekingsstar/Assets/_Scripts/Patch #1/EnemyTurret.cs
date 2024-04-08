@@ -6,6 +6,11 @@ using UnityEngine;
 
 public class EnemyTurret : MonoBehaviour
 {
+    public enum State
+    {
+        idle, attack, activate, deactivate
+    };
+    
     [Header("Projectile Settings")]
     [Range(3, 7)] public int Speed;
     [Range(1, 3)] public int Power;
@@ -17,6 +22,9 @@ public class EnemyTurret : MonoBehaviour
     [Range(1,5)] [SerializeField] float _reloadSpeed = 5;
     [SerializeField] SpriteRenderer _spr;
     float timerRef;
+
+    [Header("Animation Settings")]
+    State _currentState;
 
 
     private void Start()
@@ -65,16 +73,12 @@ public class EnemyTurret : MonoBehaviour
     IEnumerator DelayedStart(float delay)
     {
         yield return new WaitForSeconds(delay);
+        ShootProjectile();
         _run = true;
-        Deploy();
     }
 
-    void Deploy()
+    void ShootProjectile()
     {
-        //activate speed .5 seconds
-        //attack speed .4 seconds
-        //deactivate speed .5 seconds
-        
         int direction;
 
         if (_spr.flipX)
@@ -104,8 +108,7 @@ public class EnemyTurret : MonoBehaviour
 
         if (timerRef >= _reloadSpeed)
         {
-            Deploy();
-
+            ShootProjectile();
             timerRef = 0;
         }
     }
