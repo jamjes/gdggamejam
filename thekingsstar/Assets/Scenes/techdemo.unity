@@ -317,6 +317,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyTurret
       objectReference: {fileID: 0}
+    - target: {fileID: 963665534468851198, guid: fb5293c8555758f47bb2da9c05d6a3ef, type: 3}
+      propertyPath: m_FlipX
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6003757745481758632, guid: fb5293c8555758f47bb2da9c05d6a3ef, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
