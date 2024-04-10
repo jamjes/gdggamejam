@@ -117,7 +117,7 @@ public class EnemyTurret : MonoBehaviour, IDamageable
 
     public void Damage(SpawnableProjectile target)
     {
-        if(_animationController.CurrentState == AnimationController.State.deactivate)
+        if(!_run)
         {
             return;
         }
@@ -129,10 +129,5 @@ public class EnemyTurret : MonoBehaviour, IDamageable
         {
             Destroy(target.gameObject);
         }
-    }
-
-    public void Parry(int direction)
-    {
-        throw new System.NotImplementedException();
     }
 }

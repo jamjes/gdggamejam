@@ -1,4 +1,3 @@
-using UnityEditor;
 using UnityEngine;
 
 public class SpawnableProjectile : MonoBehaviour
@@ -19,7 +18,7 @@ public class SpawnableProjectile : MonoBehaviour
     float _speed;
     public int Power { private set; get; } = 1;
     int _direction = 0;
-    bool parried = true;
+    bool parried;
 
     public void Configure(int speed, int power, int direction)
     {
