@@ -21,11 +21,12 @@ public class PlayerController : MonoBehaviour
     Rigidbody2D _rb;
     [SerializeField] Animator anim;
     bool isAttacking = false;
-    static readonly int SlashAnimation = Animator.StringToHash("slash");
+    static readonly int SlashAnimation = Animator.StringToHash("attack");
     static readonly int IdleAnimation = Animator.StringToHash("idle");
     static readonly int DeathAnimation = Animator.StringToHash("death");
     static readonly int JumpAnimation = Animator.StringToHash("jump");
     static readonly int RunAnimation = Animator.StringToHash("run");
+    static readonly int HurtAnimation = Animator.StringToHash("hurt");
     bool run = true;
     int reference;
     int _direction = 1;
@@ -118,13 +119,13 @@ public class PlayerController : MonoBehaviour
 
         if (_direction == -1)
         {
-            slashOrigin.position = new Vector2(-1.3f, 0);
+            slashOrigin.position = new Vector2(-1.3f, transform.position.y);
             spr.flipX = true;
             slashDirection = Vector2.left;
         }
         else
         {
-            slashOrigin.position = new Vector2(1.3f, 0);
+            slashOrigin.position = new Vector2(1.3f, transform.position.y);
             spr.flipX = false;
             slashDirection = Vector2.right;
         }
@@ -144,11 +145,6 @@ public class PlayerController : MonoBehaviour
 
     void Slash()
     {
-        if (isAttacking || !canAttack)
-        {
-            return;
-        }
-
         StopAllCoroutines();
         StartCoroutine(PlayAttackAnimation());
 
@@ -156,39 +152,29 @@ public class PlayerController : MonoBehaviour
 
         if (slashRadius.collider != null)
         {
-            Projectile obj = slashRadius.collider.gameObject.GetComponent<Projectile>();
+            SpawnableProjectile x = slashRadius.collider.GetComponent<SpawnableProjectile>();
 
-            if (obj != null)
+            if (x == null)
             {
-                if (obj.ProjectileType == Projectile.Type.bullet)
-                {
-                    obj.Parry(_direction);
-                }
-                else
-                {
-                    obj.Damage();
-                }
+                return;
             }
-            else
-            {
-                ProjectileInverse obj2 = slashRadius.collider.gameObject.GetComponent<ProjectileInverse>();
 
-                if (obj2.ProjectileType == ProjectileInverse.Type.bullet)
-                {
-                    obj2.Parry(_direction);
-                }
-                else
-                {
-                    obj2.Damage();
-                }
+            switch(x.Type)
+            {
+                case SpawnableProjectile.ProjectileType.Bullet:
+                    x.Parry();
+                    break;
+
+                case SpawnableProjectile.ProjectileType.Bomb:
+                    x.Explode();
+                    break;
             }
         }
     }
 
     RaycastHit2D CheckSlashRadius()
     {
-        //slashOrigin.
-        return Physics2D.CircleCast(transform.position, 2f, Vector2.zero, 0, projectileLayer);
+        return Physics2D.CircleCast(slashOrigin.transform.position, .75f, Vector2.zero, 0, projectileLayer);
     }
 
     IEnumerator PlayAttackAnimation()

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class SpawnableProjectile : MonoBehaviour
@@ -8,10 +9,10 @@ public class SpawnableProjectile : MonoBehaviour
     };
     
     [Header("Animation Settings")]
-    [SerializeField] ProjectileType _type;
     [SerializeField] Sprite _staticSprite;
     [SerializeField] Sprite _dynamicSprite;
     [SerializeField] SpriteRenderer _spr;
+    public ProjectileType Type;
 
     [Header("Physics Settings")]
     [SerializeField] Rigidbody2D _rb;
@@ -69,5 +70,22 @@ public class SpawnableProjectile : MonoBehaviour
         {
             asTurret.Damage(this);
         }
+    }
+
+    public void Parry()
+    {
+        StartCoroutine(AnimatedParry());
+        parried = true;
+    }
+
+    public void Explode()
+    {
+        Destroy(gameObject);
+    }
+
+    IEnumerator AnimatedParry()
+    {
+        yield return new WaitForSeconds(.1f);
+        _speed *= -1.5f;
     }
 }

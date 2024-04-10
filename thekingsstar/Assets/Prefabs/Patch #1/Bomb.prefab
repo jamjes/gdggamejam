@@ -47,10 +47,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2407ce0feb449de4e931149a679721b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _type: 1
   _staticSprite: {fileID: 21300000, guid: 2214322fa4c7bbb43abcc7fa74b7108e, type: 3}
   _dynamicSprite: {fileID: 21300000, guid: 05434800ce977104f9b3324666eef949, type: 3}
   _spr: {fileID: 3142272128262934808}
+  Type: 1
   _rb: {fileID: 8920272931980264236}
 --- !u!212 &3142272128262934808
 SpriteRenderer:
