@@ -1,5 +1,5 @@
 public interface IDamageable
 {
-    void Damage();
+    void Damage(SpawnableProjectile target);
     void Parry(int direction);
 }

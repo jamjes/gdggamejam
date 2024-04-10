@@ -1,16 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-public class EnemyTurret : MonoBehaviour
+public class EnemyTurret : MonoBehaviour, IDamageable
 {
-    public enum State
-    {
-        idle, attack, activate, deactivate
-    };
-    
     [Header("Projectile Settings")]
     [Range(3, 7)] public int Speed;
     [Range(1, 3)] public int Power;
@@ -20,41 +12,17 @@ public class EnemyTurret : MonoBehaviour
     public GameObject[] Projectiles;
     [Range(3,6)] [SerializeField] float _startDelay = 3;
     [Range(1,5)] [SerializeField] float _reloadSpeed = 5;
-    [SerializeField] SpriteRenderer _spr;
+    [SerializeField] int health = 3;
+    
     float timerRef;
 
     [Header("Animation Settings")]
-    State _currentState;
-
+    [SerializeField] AnimationController _animationController;
+    [SerializeField] SpriteRenderer _spr;
 
     private void Start()
     {
-        string nameSelf = gameObject.name;
-        
-        if (Projectiles.Length == 0)
-        {
-            Debug.LogError($"{nameSelf} Disabled! Projectiles list is empty");
-            _run = false;
-            return;
-        }
-
-        foreach(GameObject obj in Projectiles)
-        {
-            if (obj == null)
-            {
-                Debug.LogError($"{nameSelf} Disabled! Unassigned value in Projectile List");
-                _run = false;
-                return;
-            }
-            else if (obj.GetComponent<SpawnableProjectile>() == null)
-            {
-                Debug.LogError($"{nameSelf} Disabled! Invalid object in Projectile List");
-                _run = false;
-                return;
-            }
-        }
-
-        //Remove after
+        _animationController.SetState(AnimationController.State.disabled);
         Init();
     }
 
@@ -73,8 +41,36 @@ public class EnemyTurret : MonoBehaviour
     IEnumerator DelayedStart(float delay)
     {
         yield return new WaitForSeconds(delay);
+        _animationController.BlendState(AnimationController.State.activate, AnimationController.State.attack, .4f);
+        yield return new WaitForSeconds(.4f);
         ShootProjectile();
         _run = true;
+        yield return new WaitForSeconds(.4f);
+        _animationController.SetState(AnimationController.State.idle);
+    }
+
+    IEnumerator AttackAnimation()
+    {
+        _animationController.SetState(AnimationController.State.attack);
+        yield return new WaitForSeconds(.4f);
+        _animationController.SetState(AnimationController.State.idle);
+    }
+
+    IEnumerator HurtAnimation()
+    {
+        _run = false;
+        _animationController.SetState(AnimationController.State.hurt);
+        yield return new WaitForSeconds(.3f);
+        if (health <= 0)
+        {
+            _animationController.SetState(AnimationController.State.deactivate);
+            _run = false;
+        }
+        else
+        {
+            _animationController.SetState(AnimationController.State.idle);
+            _run = true;
+        }
     }
 
     void ShootProjectile()
@@ -99,6 +95,11 @@ public class EnemyTurret : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            StartCoroutine(HurtAnimation());
+        }
+        
         if (!_run)
         {
             return;
@@ -108,8 +109,30 @@ public class EnemyTurret : MonoBehaviour
 
         if (timerRef >= _reloadSpeed)
         {
+            StartCoroutine(AttackAnimation());
             ShootProjectile();
             timerRef = 0;
         }
+    }
+
+    public void Damage(SpawnableProjectile target)
+    {
+        if(_animationController.CurrentState == AnimationController.State.deactivate)
+        {
+            return;
+        }
+
+        health -= target.Power;
+        StartCoroutine(HurtAnimation());
+        
+        if (health >= 0)
+        {
+            Destroy(target.gameObject);
+        }
+    }
+
+    public void Parry(int direction)
+    {
+        throw new System.NotImplementedException();
     }
 }

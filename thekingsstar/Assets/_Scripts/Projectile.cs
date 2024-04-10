@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Projectile : MonoBehaviour, IDamageable
+public class Projectile : MonoBehaviour//, IDamageable
 {
     Rigidbody2D _rb;
     float speed;

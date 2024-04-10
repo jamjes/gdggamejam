@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 public class SpawnableProjectile : MonoBehaviour
@@ -16,16 +17,17 @@ public class SpawnableProjectile : MonoBehaviour
     [Header("Physics Settings")]
     [SerializeField] Rigidbody2D _rb;
     float _speed;
-    int _power = 1;
+    public int Power { private set; get; } = 1;
     int _direction = 0;
-    
+    bool parried = true;
+
     public void Configure(int speed, int power, int direction)
     {
         float minSpeed = speed - 1;
         float maxSpeed = speed + 2;
         _speed = Random.Range(minSpeed, maxSpeed);
         
-        _power = power;
+        Power = power;
         _direction = direction;
     }
 
@@ -60,6 +62,13 @@ public class SpawnableProjectile : MonoBehaviour
         if (collision.gameObject.layer == LayerMask.NameToLayer("Killzone"))
         {
             Destroy(gameObject);
+        }
+
+        EnemyTurret asTurret = collision.GetComponent<EnemyTurret>();
+
+        if (asTurret != null && parried)
+        {
+            asTurret.Damage(this);
         }
     }
 }

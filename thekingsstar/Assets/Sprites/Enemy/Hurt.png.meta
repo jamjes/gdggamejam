@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 295933257bf7fa04da5dc2af5d66acb6
+guid: 554b4931e7068f14684b97dc1784c914
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -136,7 +136,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Attack_0
+      name: Hurt_0
       rect:
         serializedVersion: 2
         x: 0
@@ -150,14 +150,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 013e7cb724c6bbf4e9d2252b46e43ccc
-      internalID: 1158557696
+      spriteID: a19795e3dee3d964292eb74dcadb4de5
+      internalID: -2009706751
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Attack_1
+      name: Hurt_1
       rect:
         serializedVersion: 2
         x: 48
@@ -171,50 +171,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3ca3b61830ecd784aace30631dbedeb1
-      internalID: -198593417
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Attack_2
-      rect:
-        serializedVersion: 2
-        x: 96
-        y: 0
-        width: 48
-        height: 48
-      alignment: 5
-      pivot: {x: 1, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f751ba13817d9c942813fbbb9ac42177
-      internalID: 648803872
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Attack_3
-      rect:
-        serializedVersion: 2
-        x: 144
-        y: 0
-        width: 48
-        height: 48
-      alignment: 5
-      pivot: {x: 1, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 5a171bf1319b53f4c840074f176ccb90
-      internalID: -183273089
+      spriteID: 62b3951aa4eb3f8458e51a22b8002b0a
+      internalID: 1311481750
       vertices: []
       indices: 
       edges: []
@@ -230,10 +188,8 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Attack_0: 1158557696
-      Attack_1: -198593417
-      Attack_2: 648803872
-      Attack_3: -183273089
+      Hurt_0: -2009706751
+      Hurt_1: 1311481750
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
