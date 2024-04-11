@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     bool isAttacking = false;
     public bool IsAttacking;
     public bool IsGrounded;
-    public bool IsDead;
+    public bool IsDead = false;
     bool run = true;
     int reference;
     int _direction = 1;
@@ -69,7 +69,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     private void Update()
     {
-        if (!run)
+        if (IsDead)
         {
             return;
         }
@@ -148,7 +148,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     void Slash()
     {
-        bool condition = true;
         RaycastHit2D slashRadius = CheckSlashRadius();
 
         if (slashRadius.collider != null)
@@ -168,17 +167,18 @@ public class PlayerController : MonoBehaviour, IDamageable
 
                 case SpawnableProjectile.ProjectileType.Bomb:
                     x.Explode();
-                    Death();
-                    condition = false;
-                    Damage(null);
+                    StartCoroutine(SlashFail());
                     break;
             }
         }
+        
+        StartCoroutine(Attack());
+    }
 
-        if (condition)
-        {
-            StartCoroutine(Attack());
-        }
+    IEnumerator SlashFail()
+    {
+        yield return new WaitForSeconds(.2f);
+        Damage(null);
     }
 
     RaycastHit2D CheckSlashRadius()

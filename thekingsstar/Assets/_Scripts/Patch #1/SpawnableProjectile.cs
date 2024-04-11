@@ -75,7 +75,13 @@ public class SpawnableProjectile : MonoBehaviour
 
         if (asPlayer != null && Type == ProjectileType.Bomb)
         {
+            if (asPlayer.IsDead)
+            {
+                return;
+            }
+
             asPlayer.Damage(this);
+            Explode();
         }
     }
 
