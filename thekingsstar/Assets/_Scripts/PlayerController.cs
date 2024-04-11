@@ -4,6 +4,9 @@ using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour, IDamageable
 {
+    public delegate void PlayerAudio();
+    public static event PlayerAudio OnDeathEnter;
+
     public enum State
     {
         idle,
@@ -88,6 +91,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         {
             if (IsGrounded)
             {
+                AudioController.PlayAudio(PlayerAudioController.Sound.jump);
                 Jump();
             }
         }
@@ -303,7 +307,13 @@ public class PlayerController : MonoBehaviour, IDamageable
     {
         if (!IsDead)
         {
+            AudioController.PlayAudio(PlayerAudioController.Sound.death);
             IsDead = true;
+            if (OnDeathEnter != null)
+            {
+                OnDeathEnter();
+            }
+
         }
 
         /*if (target.Type == SpawnableProjectile.ProjectileType.Bomb)

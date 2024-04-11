@@ -276,6 +276,9 @@ MonoBehaviour:
   Slash: {fileID: 0}
   Deactivate: {fileID: 8300000, guid: 4195c648283f05c4ab87802904e3316b, type: 3}
   Idle: {fileID: 8300000, guid: 172234ba37ae2034f907eb7185f1659e, type: 3}
+  Jump: {fileID: 0}
+  Death: {fileID: 0}
+  Damage: {fileID: 8300000, guid: 177b24c5cb7de33409a4610419f88954, type: 3}
 --- !u!82 &7235030693296150620
 AudioSource:
   m_ObjectHideFlags: 0

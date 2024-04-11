@@ -181,7 +181,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7645633062266051830, guid: fb5293c8555758f47bb2da9c05d6a3ef, type: 3}
       propertyPath: Speed
-      value: 4
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 7645633062266051830, guid: fb5293c8555758f47bb2da9c05d6a3ef, type: 3}
       propertyPath: health
@@ -193,11 +193,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7645633062266051830, guid: fb5293c8555758f47bb2da9c05d6a3ef, type: 3}
       propertyPath: _reloadSpeed
-      value: 2
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 7645633062266051830, guid: fb5293c8555758f47bb2da9c05d6a3ef, type: 3}
       propertyPath: Projectiles.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7645633062266051830, guid: fb5293c8555758f47bb2da9c05d6a3ef, type: 3}
       propertyPath: Projectiles.Array.data[0]
@@ -971,6 +971,9 @@ MonoBehaviour:
   Slash: {fileID: 8300000, guid: 2c3ef64513fc6ed4ca4c9057895f319d, type: 3}
   Deactivate: {fileID: 0}
   Idle: {fileID: 0}
+  Jump: {fileID: 8300000, guid: 2361e7befcb004d49878e2364cad4860, type: 3}
+  Death: {fileID: 8300000, guid: 25551db7b7e18064a886d28712ca8b2a, type: 3}
+  Damage: {fileID: 0}
 --- !u!1001 &1688420817
 PrefabInstance:
   m_ObjectHideFlags: 0

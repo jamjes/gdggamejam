@@ -23,6 +23,16 @@ public class EnemyTurret : MonoBehaviour, IDamageable
     [SerializeField] SpriteRenderer _spr;
     public PlayerAudioController AudioController;
 
+    private void OnEnable()
+    {
+        PlayerController.OnDeathEnter += ForceEnd;
+    }
+
+    private void OnDisable()
+    {
+        PlayerController.OnDeathEnter -= ForceEnd;
+    }
+
     private void Start()
     {
         _animationController.SetState(AnimationController.State.disabled);
@@ -64,6 +74,7 @@ public class EnemyTurret : MonoBehaviour, IDamageable
     {
         _run = false;
         _animationController.SetState(AnimationController.State.hurt);
+        if (health != 0) AudioController.PlayAudio(PlayerAudioController.Sound.damage);
         yield return new WaitForSeconds(.3f);
         if (health <= 0)
         {
@@ -101,11 +112,6 @@ public class EnemyTurret : MonoBehaviour, IDamageable
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            StartCoroutine(HurtAnimation());
-        }
-        
         if (!_run)
         {
             return;
@@ -135,5 +141,10 @@ public class EnemyTurret : MonoBehaviour, IDamageable
         {
             Destroy(target.gameObject);
         }
+    }
+
+    void ForceEnd()
+    {
+        _run = false;
     }
 }
