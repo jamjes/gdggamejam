@@ -13,7 +13,8 @@ public class PlayerController : MonoBehaviour, IDamageable
         death
     };
     public State CurrentState;
-    
+
+    public PlayerAudioController AudioController;
 
     [SerializeField] Transform slashOrigin;
     [SerializeField] SpriteRenderer spr;
@@ -149,7 +150,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     void Slash()
     {
         RaycastHit2D slashRadius = CheckSlashRadius();
-
+        bool sound = false;
         if (slashRadius.collider != null)
         {
             SpawnableProjectile x = slashRadius.collider.GetComponent<SpawnableProjectile>();
@@ -163,6 +164,8 @@ public class PlayerController : MonoBehaviour, IDamageable
             {
                 case SpawnableProjectile.ProjectileType.Bullet:
                     x.Parry();
+                    AudioController.PlayAudio(PlayerAudioController.Sound.parry);
+                    sound = true;
                     break;
 
                 case SpawnableProjectile.ProjectileType.Bomb:
@@ -173,6 +176,10 @@ public class PlayerController : MonoBehaviour, IDamageable
         }
         
         StartCoroutine(Attack());
+        if (sound == false)
+        {
+            AudioController.PlayAudio(PlayerAudioController.Sound.slash);
+        }
     }
 
     IEnumerator SlashFail()

@@ -13,12 +13,15 @@ public class EnemyTurret : MonoBehaviour, IDamageable
     [Range(3,6)] [SerializeField] float _startDelay = 3;
     [Range(1,5)] [SerializeField] float _reloadSpeed = 5;
     [SerializeField] int health = 3;
+
+    
     
     float timerRef;
 
     [Header("Animation Settings")]
     [SerializeField] AnimationController _animationController;
     [SerializeField] SpriteRenderer _spr;
+    public PlayerAudioController AudioController;
 
     private void Start()
     {
@@ -41,6 +44,7 @@ public class EnemyTurret : MonoBehaviour, IDamageable
     IEnumerator DelayedStart(float delay)
     {
         yield return new WaitForSeconds(delay);
+        AudioController.PlayAudioContinuous(PlayerAudioController.Sound.idle);
         _animationController.BlendState(AnimationController.State.activate, AnimationController.State.attack, .4f);
         yield return new WaitForSeconds(.4f);
         ShootProjectile();
@@ -64,6 +68,8 @@ public class EnemyTurret : MonoBehaviour, IDamageable
         if (health <= 0)
         {
             _animationController.SetState(AnimationController.State.deactivate);
+            AudioController.StopAudioContinuous();
+            AudioController.PlayAudio(PlayerAudioController.Sound.deactivate);
             _run = false;
         }
         else
