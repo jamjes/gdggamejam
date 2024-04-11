@@ -70,6 +70,13 @@ public class SpawnableProjectile : MonoBehaviour
         {
             asTurret.Damage(this);
         }
+
+        PlayerController asPlayer = collision.GetComponent<PlayerController>();
+
+        if (asPlayer != null && Type == ProjectileType.Bomb)
+        {
+            asPlayer.Damage(this);
+        }
     }
 
     public void Parry()
