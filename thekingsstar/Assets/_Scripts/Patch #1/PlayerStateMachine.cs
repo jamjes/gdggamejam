@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerStateMachine : MonoBehaviour
@@ -19,11 +20,25 @@ public class PlayerStateMachine : MonoBehaviour
     static readonly int JumpAnimation = Animator.StringToHash("jump");
     static readonly int AttackAnimation = Animator.StringToHash("attack");
 
-    private void Start()
+    private void OnEnable()
+    {
+        MainButton.OnGameEnter += Reset;
+    }
+
+    private void Reset()
     {
         CurrentState = State.idle;
     }
 
+    private void OnDisable()
+    {
+        MainButton.OnGameEnter -= Reset;
+    }
+
+    private void Start()
+    {
+        CurrentState = State.idle;
+    }
     private void Update()
     {
         StateAnimUpdate();

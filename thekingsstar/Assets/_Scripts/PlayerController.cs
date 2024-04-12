@@ -25,24 +25,15 @@ public class PlayerController : MonoBehaviour, IDamageable
     [SerializeField] LayerMask projectileLayer;
     Rigidbody2D _rb;
     [SerializeField] LayerMask groundLayer;
-
-
-    /*[SerializeField] Animator anim;
-    static readonly int SlashAnimation = Animator.StringToHash("attack");
-    static readonly int IdleAnimation = Animator.StringToHash("idle");
-    static readonly int DeathAnimation = Animator.StringToHash("hurt");
-    static readonly int JumpAnimation = Animator.StringToHash("jump");
-    static readonly int RunAnimation = Animator.StringToHash("run");*/
-
-
-    bool isAttacking = false;
+    
+    //bool isAttacking = false;
     public bool IsAttacking;
     public bool IsGrounded;
     public bool IsDead = false;
-    bool run = true;
+    //bool run = true;
     int reference;
     int _direction = 1;
-    bool runStateMachine = true;
+    //bool runStateMachine = true;
 
     public delegate void GameDelegate();
     public static event GameDelegate OnMoveEnd;
@@ -55,6 +46,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         Projectile.OnDeathEnter += Death;
         ProjectileInverse.OnDeathEnter += Death;
         Door.OnGameWin += Proceed;
+        MainButton.OnGameEnter += Restart;
     }
 
     private void OnDisable()
@@ -62,6 +54,17 @@ public class PlayerController : MonoBehaviour, IDamageable
         Projectile.OnDeathEnter -= Death;
         ProjectileInverse.OnDeathEnter -= Death;
         Door.OnGameWin -= Proceed;
+        MainButton.OnGameEnter -= Restart;
+    }
+
+    void Restart()
+    {
+        if (IsDead)
+        {
+            IsDead = false;
+        }
+
+        CurrentState = State.idle;
     }
 
     private void Start()
@@ -84,7 +87,6 @@ public class PlayerController : MonoBehaviour, IDamageable
         {
             StopAllCoroutines();
             Slash();
-            /*StartCoroutine(SetStateFor(State.slash, .3f));*/
         }
 
         if (Input.GetKeyDown(KeyCode.W))
@@ -104,25 +106,6 @@ public class PlayerController : MonoBehaviour, IDamageable
         {
             FlipPlayer(1);
         }
-
-        /*if (runStateMachine)
-        {
-            if (_rb.velocity.y != 0)
-            {
-                UpdateSuperState(State.jump);
-            }
-            else if (_rb.velocity.y == 0)
-            {
-                UpdateSuperState(State.idle);
-            }
-        }
-
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            StartCoroutine(SetStateFor(State.slash, .3f));
-        }
-
-        StateAnimUpdate();*/
     }
 
     void FlipPlayer(int direction)
@@ -212,7 +195,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     void Death()
     {
         StopAllCoroutines();
-        run = false;
+        //run = false;
         CurrentState = State.death;
         _direction = 0;
         _rb.velocity = Vector2.zero;
@@ -260,49 +243,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         canAttack = true;
         canJump = true;
     }
-
-    /*void UpdateSuperState(State target)
-    {
-        if (CurrentState == target)
-        {
-            return;
-        }
-
-        CurrentState = target;
-    }*/
-
-    /*void StateAnimUpdate()
-    {
-        switch (CurrentState)
-        {
-            case State.idle:
-                anim.CrossFade(IdleAnimation, 0, 0);
-                break;
-            case State.jump:
-                anim.CrossFade(JumpAnimation, 0, 0);
-                break;
-            case State.run:
-                anim.CrossFade(RunAnimation, 0, 0);
-                break;
-            case State.death:
-                anim.CrossFade(DeathAnimation, 0, 0);
-                break;
-            case State.slash:
-                anim.CrossFade(SlashAnimation, 0, 0);
-                break;
-        }
-    }*/
-
-    /*IEnumerator SetStateFor(State target, float duration)
-    {
-        runStateMachine = false;
-        State originalState = CurrentState;
-        CurrentState = target;
-        yield return new WaitForSeconds(duration);
-        CurrentState = originalState;
-        runStateMachine = true;
-    }*/
-
+    
     public void Damage(SpawnableProjectile target)
     {
         if (!IsDead)
@@ -313,13 +254,6 @@ public class PlayerController : MonoBehaviour, IDamageable
             {
                 OnDeathEnter();
             }
-
         }
-
-        /*if (target.Type == SpawnableProjectile.ProjectileType.Bomb)
-        {
-            run = false;
-            UpdateSuperState(State.death);
-        }*/
     }
 }

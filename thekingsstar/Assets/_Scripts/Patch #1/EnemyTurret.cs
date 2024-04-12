@@ -14,7 +14,8 @@ public class EnemyTurret : MonoBehaviour, IDamageable
     [Range(1,5)] [SerializeField] float _reloadSpeed = 5;
     [SerializeField] int health = 3;
 
-    
+    public delegate void Turret();
+    public static event Turret OnTurretDeath;
     
     float timerRef;
 
@@ -26,17 +27,18 @@ public class EnemyTurret : MonoBehaviour, IDamageable
     private void OnEnable()
     {
         PlayerController.OnDeathEnter += ForceEnd;
+        MainButton.OnGameEnter += Init;
     }
 
     private void OnDisable()
     {
         PlayerController.OnDeathEnter -= ForceEnd;
+        MainButton.OnGameEnter -= Init;
     }
 
     private void Start()
     {
         _animationController.SetState(AnimationController.State.disabled);
-        Init();
     }
 
     public void EnableTurret(float startDelay, float reloadSpeed)
@@ -48,6 +50,7 @@ public class EnemyTurret : MonoBehaviour, IDamageable
 
     void Init()
     {
+        health = 5;
         StartCoroutine(DelayedStart(_startDelay));
     }
 
@@ -81,6 +84,12 @@ public class EnemyTurret : MonoBehaviour, IDamageable
             _animationController.SetState(AnimationController.State.deactivate);
             AudioController.StopAudioContinuous();
             AudioController.PlayAudio(PlayerAudioController.Sound.deactivate);
+
+            if (OnTurretDeath != null)
+            {
+                OnTurretDeath();
+            }
+
             _run = false;
         }
         else
