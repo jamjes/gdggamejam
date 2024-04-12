@@ -47,10 +47,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2407ce0feb449de4e931149a679721b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _type: 0
   _staticSprite: {fileID: 21300000, guid: 2214322fa4c7bbb43abcc7fa74b7108e, type: 3}
   _dynamicSprite: {fileID: 21300000, guid: 05434800ce977104f9b3324666eef949, type: 3}
   _spr: {fileID: 490151458553703531}
+  Type: 0
   _rb: {fileID: 680415109031026831}
 --- !u!212 &490151458553703531
 SpriteRenderer:
@@ -90,8 +90,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1512871125
+  m_SortingLayer: 3
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 2214322fa4c7bbb43abcc7fa74b7108e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

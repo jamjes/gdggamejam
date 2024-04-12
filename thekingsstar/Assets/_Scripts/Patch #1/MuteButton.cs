@@ -8,6 +8,9 @@ public class MuteButton : MonoBehaviour
 {
     public bool muted;
     public Image spr;
+    public Button self;
+    public Sprite muteDef, unmuteDef;
+
 
     public void ToggleMute()
     {
@@ -16,11 +19,12 @@ public class MuteButton : MonoBehaviour
 
         if (muted)
         {
-            spr.color = Color.grey;
             foreach (AudioSource audio in As)
             {
                 audio.volume = 0;
             }
+
+            spr.sprite = unmuteDef;
         }
         else if (!muted)
         {
@@ -30,6 +34,8 @@ public class MuteButton : MonoBehaviour
                 if (audio.tag == "sfx") audio.volume = 0.6f;
                 else if (audio.tag == "bg") audio.volume = 0.3f;
             }
+
+            spr.sprite = muteDef;
         }
     }
 }

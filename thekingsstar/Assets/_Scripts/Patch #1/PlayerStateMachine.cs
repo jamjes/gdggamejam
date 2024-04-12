@@ -22,7 +22,7 @@ public class PlayerStateMachine : MonoBehaviour
 
     private void OnEnable()
     {
-        MainButton.OnGameEnter += Reset;
+        GameManager.OnGameEnter += Reset;
     }
 
     private void Reset()
@@ -32,7 +32,7 @@ public class PlayerStateMachine : MonoBehaviour
 
     private void OnDisable()
     {
-        MainButton.OnGameEnter -= Reset;
+        GameManager.OnGameEnter -= Reset;
     }
 
     private void Start()

@@ -46,7 +46,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         Projectile.OnDeathEnter += Death;
         ProjectileInverse.OnDeathEnter += Death;
         Door.OnGameWin += Proceed;
-        MainButton.OnGameEnter += Restart;
+        GameManager.OnGameEnter += Restart;
     }
 
     private void OnDisable()
@@ -54,7 +54,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         Projectile.OnDeathEnter -= Death;
         ProjectileInverse.OnDeathEnter -= Death;
         Door.OnGameWin -= Proceed;
-        MainButton.OnGameEnter -= Restart;
+        GameManager.OnGameEnter -= Restart;
     }
 
     void Restart()
@@ -100,11 +100,11 @@ public class PlayerController : MonoBehaviour, IDamageable
 
         if (Input.GetKeyDown(KeyCode.A))
         {
-            FlipPlayer(-1);
+            //FlipPlayer(-1);
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
-            FlipPlayer(1);
+            //FlipPlayer(1);
         }
     }
 
@@ -114,12 +114,10 @@ public class PlayerController : MonoBehaviour, IDamageable
 
         if (_direction == -1)
         {
-            slashOrigin.position = new Vector2(-1.3f, transform.position.y);
             spr.flipX = true;
         }
         else
         {
-            slashOrigin.position = new Vector2(1.3f, transform.position.y);
             spr.flipX = false;
         }
     }

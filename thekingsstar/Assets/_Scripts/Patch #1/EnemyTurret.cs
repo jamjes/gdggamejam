@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class EnemyTurret : MonoBehaviour, IDamageable
@@ -16,6 +17,8 @@ public class EnemyTurret : MonoBehaviour, IDamageable
 
     public delegate void Turret();
     public static event Turret OnTurretDeath;
+
+    [SerializeField] TextMeshProUGUI healthLabel;
     
     float timerRef;
 
@@ -27,13 +30,13 @@ public class EnemyTurret : MonoBehaviour, IDamageable
     private void OnEnable()
     {
         PlayerController.OnDeathEnter += ForceEnd;
-        MainButton.OnGameEnter += Init;
+        GameManager.OnGameEnter += Init;
     }
 
     private void OnDisable()
     {
         PlayerController.OnDeathEnter -= ForceEnd;
-        MainButton.OnGameEnter -= Init;
+        GameManager.OnGameEnter -= Init;
     }
 
     private void Start()
@@ -51,6 +54,7 @@ public class EnemyTurret : MonoBehaviour, IDamageable
     void Init()
     {
         health = 5;
+        healthLabel.text = health.ToString();
         StartCoroutine(DelayedStart(_startDelay));
     }
 
@@ -144,6 +148,7 @@ public class EnemyTurret : MonoBehaviour, IDamageable
         }
 
         health -= target.Power;
+        healthLabel.text = health.ToString();
         StartCoroutine(HurtAnimation());
         
         if (health >= 0)
