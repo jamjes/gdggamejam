@@ -4,24 +4,13 @@ using UnityEngine;
 
 public class EnemyTurret : MonoBehaviour, IDamageable
 {
-    [Header("Projectile Settings")]
-    [Range(3, 7)] public int Speed;
-    [Range(1, 3)] public int Power;
-
-    [Header("Turret Settings")]
+    [SerializeField] TurretSettingsScriptableObject _settings;
     bool _run = false;
-    public GameObject[] Projectiles;
-    [Range(3,6)] [SerializeField] float _startDelay = 3;
-    [Range(1,5)] [SerializeField] float _reloadSpeed = 5;
-    [SerializeField] int health = 3;
-
+    int health;
     public delegate void Turret();
     public static event Turret OnTurretDeath;
-
     [SerializeField] TextMeshProUGUI healthLabel;
-    
     float timerRef;
-
     [Header("Animation Settings")]
     [SerializeField] AnimationController _animationController;
     [SerializeField] SpriteRenderer _spr;
@@ -46,16 +35,30 @@ public class EnemyTurret : MonoBehaviour, IDamageable
 
     public void EnableTurret(float startDelay, float reloadSpeed)
     {
-        _startDelay = startDelay;
-        _reloadSpeed = reloadSpeed;
+        if (_settings.StartDelay)
+        {
+            _settings.DelayDuration = startDelay;
+        }
+        _settings.ReloadSpeed = reloadSpeed;
         Init();
     }
 
     void Init()
     {
-        health = 5;
+        health = _settings.Health;
         healthLabel.text = health.ToString();
-        StartCoroutine(DelayedStart(_startDelay));
+        float delay;
+
+        if (_settings.StartDelay)
+        {
+            delay = _settings.DelayDuration;
+        }
+        else
+        {
+            delay = 0;
+        }
+        
+        StartCoroutine(DelayedStart(delay));
     }
 
     IEnumerator DelayedStart(float delay)
@@ -116,10 +119,10 @@ public class EnemyTurret : MonoBehaviour, IDamageable
             direction = 1;
         }
 
-        int index = Random.Range(0, Projectiles.Length);
-        GameObject obj = Instantiate(Projectiles[index], transform.position, Quaternion.identity);
+        int index = Random.Range(0, _settings.Projectiles.Length);
+        GameObject obj = Instantiate(_settings.Projectiles[index], transform.position, Quaternion.identity);
         obj.transform.parent = transform;
-        obj.GetComponent<SpawnableProjectile>().Configure(Speed,Power,direction);
+        obj.GetComponent<SpawnableProjectile>().Configure(_settings.ProjectileSpeed, _settings.ProjectilePower, direction);
 
     }
 
@@ -132,7 +135,7 @@ public class EnemyTurret : MonoBehaviour, IDamageable
 
         timerRef += Time.deltaTime;
 
-        if (timerRef >= _reloadSpeed)
+        if (timerRef >= _settings.ReloadSpeed)
         {
             StartCoroutine(AttackAnimation());
             ShootProjectile();

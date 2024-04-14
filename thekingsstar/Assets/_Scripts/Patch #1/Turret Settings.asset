@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 511cfe5a86c216a4ea7c5748e15f5520, type: 3}
+  m_Name: Turret Settings
+  m_EditorClassIdentifier: 
+  Health: 5
+  StartDelay: 0
+  DelayDuration: 3
+  ReloadSpeed: 2
+  Projectiles:
+  - {fileID: 1226173606107172578, guid: 778ff4cbd6a146c40b581bac22c1e722, type: 3}
+  - {fileID: 6057156523928942994, guid: e69e39b06ebc3d546a2ac27737dcbeed, type: 3}
+  ProjectileSpeed: 7
+  ProjectilePower: 1
