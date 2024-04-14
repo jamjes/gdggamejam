@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class SpawnableProjectile : MonoBehaviour
 {
+    bool _run = true;
+
     public enum ProjectileType
     {
         Bullet, Bomb
@@ -52,9 +54,20 @@ public class SpawnableProjectile : MonoBehaviour
         }
     }
 
+    void Freeze()
+    {
+        _run = false;
+        _rb.velocity = new Vector2(0, _rb.velocity.y);
+    }
+
+    void UnFreeze()
+    {
+        _run = true;
+    }
+
     void FixedUpdate()
     {
-        _rb.velocity = new Vector2(_direction * _speed, _rb.velocity.y);
+        if (_run) _rb.velocity = new Vector2(_direction * _speed, _rb.velocity.y);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -100,5 +113,17 @@ public class SpawnableProjectile : MonoBehaviour
     {
         yield return new WaitForSeconds(.1f);
         _speed *= -1.5f;
+    }
+
+    private void OnEnable()
+    {
+        GameManager.OnPauseEnter += Freeze;
+        GameManager.OnPauseExit += UnFreeze;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.OnPauseEnter -= Freeze;
+        GameManager.OnPauseExit -= UnFreeze;
     }
 }

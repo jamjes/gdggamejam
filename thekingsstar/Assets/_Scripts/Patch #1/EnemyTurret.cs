@@ -20,17 +20,31 @@ public class EnemyTurret : MonoBehaviour, IDamageable
     {
         PlayerController.OnDeathEnter += ForceEnd;
         GameManager.OnGameEnter += Init;
+        GameManager.OnPauseEnter += Freeze;
+        GameManager.OnPauseExit += UnFreeze;
     }
 
     private void OnDisable()
     {
         PlayerController.OnDeathEnter -= ForceEnd;
         GameManager.OnGameEnter -= Init;
+        GameManager.OnPauseEnter -= Freeze;
+        GameManager.OnPauseExit -= UnFreeze;
     }
 
     private void Start()
     {
         _animationController.SetState(AnimationController.State.disabled);
+    }
+
+    void Freeze()
+    {
+        if (health != 0) _run = false;
+    }
+
+    void UnFreeze()
+    {
+        if (health != 0) _run = true;
     }
 
     public void EnableTurret(float startDelay, float reloadSpeed)
