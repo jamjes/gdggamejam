@@ -76,11 +76,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            GameManager.Instance.ToggleRunState();
-        }
-
         if (IsDead || GameManager.Instance.Run == false)
         {
             return;

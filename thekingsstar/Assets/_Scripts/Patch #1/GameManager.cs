@@ -36,6 +36,11 @@ public class GameManager : MonoBehaviour
 
     public void ToggleRunState()
     {
+        if (FindObjectOfType<PlayerController>().IsDead)
+        {
+            return;
+        }
+
         Run = !Run;
 
         if (!Run && OnPauseEnter != null)
