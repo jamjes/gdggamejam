@@ -8,11 +8,13 @@ public class PlayerAudioController : MonoBehaviour
     private void OnEnable()
     {
         PlayerController.OnDeathEnter += StopAudioContinuous;
+        MuteButton.OnMuteCondition += SetAudioVolume;
     }
 
     private void OnDisable()
     {
         PlayerController.OnDeathEnter -= StopAudioContinuous;
+        MuteButton.OnMuteCondition -= SetAudioVolume;
     }
 
     public enum Sound
@@ -57,5 +59,19 @@ public class PlayerAudioController : MonoBehaviour
     public void StopAudioContinuous()
     {
         if (AsMain != null ) AsMain.Stop();
+    }
+
+    public void SetAudioVolume(bool muted)
+    {
+        if (muted)
+        {
+            if (AsFX != null) AsFX.volume = 0;
+            if (AsMain != null) AsMain.Stop();
+        }
+        else
+        {
+            if (AsFX != null) AsFX.volume = .6f;
+            if (AsMain != null) AsMain.Play();
+        }
     }
 }
