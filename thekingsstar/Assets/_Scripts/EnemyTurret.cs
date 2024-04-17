@@ -4,17 +4,18 @@ using UnityEngine;
 
 public class EnemyTurret : MonoBehaviour, IDamageable
 {
-    [SerializeField] TurretSettingsScriptableObject _settings;
-    bool _run = false;
-    int health;
     public delegate void Turret();
     public static event Turret OnTurretDeath;
-    [SerializeField] TextMeshProUGUI healthLabel;
-    float timerRef;
-    [Header("Animation Settings")]
+    public PlayerAudioController AudioController;
+    
+    [SerializeField] TurretSettingsScriptableObject _settings;
     [SerializeField] AnimationController _animationController;
     [SerializeField] SpriteRenderer _spr;
-    public PlayerAudioController AudioController;
+    [SerializeField] TextMeshProUGUI healthLabel;
+
+    bool _run = false;
+    int health;
+    float timerRef;
 
     private void OnEnable()
     {
@@ -39,12 +40,18 @@ public class EnemyTurret : MonoBehaviour, IDamageable
 
     void Freeze()
     {
-        if (health != 0) _run = false;
+        if (health != 0)
+        {
+            _run = false;
+        } 
     }
 
     void UnFreeze()
     {
-        if (health != 0) _run = true;
+        if (health != 0)
+        {
+            _run = true;
+        }
     }
 
     public void EnableTurret(float startDelay, float reloadSpeed)
@@ -53,6 +60,7 @@ public class EnemyTurret : MonoBehaviour, IDamageable
         {
             _settings.DelayDuration = startDelay;
         }
+        
         _settings.ReloadSpeed = reloadSpeed;
         Init();
     }
@@ -78,12 +86,15 @@ public class EnemyTurret : MonoBehaviour, IDamageable
     IEnumerator DelayedStart(float delay)
     {
         yield return new WaitForSeconds(delay);
+        
         AudioController.PlayAudioContinuous(PlayerAudioController.Sound.idle);
         _animationController.BlendState(AnimationController.State.activate, AnimationController.State.attack, .4f);
         yield return new WaitForSeconds(.4f);
+        
         ShootProjectile();
         _run = true;
         yield return new WaitForSeconds(.4f);
+        
         _animationController.SetState(AnimationController.State.idle);
     }
 
@@ -91,6 +102,7 @@ public class EnemyTurret : MonoBehaviour, IDamageable
     {
         _animationController.SetState(AnimationController.State.attack);
         yield return new WaitForSeconds(.4f);
+        
         _animationController.SetState(AnimationController.State.idle);
     }
 
@@ -98,26 +110,36 @@ public class EnemyTurret : MonoBehaviour, IDamageable
     {
         _run = false;
         _animationController.SetState(AnimationController.State.hurt);
-        if (health != 0) AudioController.PlayAudio(PlayerAudioController.Sound.damage);
-        yield return new WaitForSeconds(.3f);
-        if (health <= 0)
+        
+        if (health != 0)
         {
-            _animationController.SetState(AnimationController.State.deactivate);
-            AudioController.StopAudioContinuous();
-            AudioController.PlayAudio(PlayerAudioController.Sound.deactivate);
-
-            if (OnTurretDeath != null)
-            {
-                OnTurretDeath();
-            }
-
-            _run = false;
+            AudioController.PlayAudio(PlayerAudioController.Sound.damage);
         }
-        else
+
+        yield return new WaitForSeconds(.3f);
+        
+        HurtEvent();
+    }
+
+    void HurtEvent()
+    {
+        if (health > 0)
         {
             _animationController.SetState(AnimationController.State.idle);
             _run = true;
+            return;
         }
+
+        _animationController.SetState(AnimationController.State.deactivate);
+        AudioController.StopAudioContinuous();
+        AudioController.PlayAudio(PlayerAudioController.Sound.deactivate);
+
+        if (OnTurretDeath != null)
+        {
+            OnTurretDeath();
+        }
+
+        _run = false;
     }
 
     void ShootProjectile()

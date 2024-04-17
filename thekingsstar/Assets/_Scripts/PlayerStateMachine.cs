@@ -11,10 +11,9 @@ public class PlayerStateMachine : MonoBehaviour
     };
     public Rigidbody2D Rb;
     public State CurrentState;
-
     public PlayerController Player;
-
     public Animator Anim;
+
     static readonly int IdleAnimation = Animator.StringToHash("idle");
     static readonly int DeathAnimation = Animator.StringToHash("hurt");
     static readonly int JumpAnimation = Animator.StringToHash("jump");
@@ -79,15 +78,19 @@ public class PlayerStateMachine : MonoBehaviour
             case State.idle:
                 Anim.CrossFade(IdleAnimation, 0, 0);
                 break;
+
             case State.jump:
                 Anim.CrossFade(JumpAnimation, 0, 0);
                 break;
+
             case State.death:
                 Anim.CrossFade(DeathAnimation, 0, 0);
                 break;
+
             case State.attack:
                 Anim.CrossFade(AttackAnimation, 0, 0);
                 break;
+
         }
     }
 }

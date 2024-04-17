@@ -1,10 +1,12 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AnimationController : MonoBehaviour
 {
+    public enum State { disabled, idle, activate, run, attack, hurt, deactivate };
+    public State CurrentState;
     public Animator Anim;
+
     static readonly int IdleAnimation = Animator.StringToHash("idle"); 
     static readonly int DisabledAnimation = Animator.StringToHash("disabled");
     static readonly int ActivateAnimation = Animator.StringToHash("activate");
@@ -13,19 +15,12 @@ public class AnimationController : MonoBehaviour
     static readonly int HurtAnimation = Animator.StringToHash("hurt");
     static readonly int DeactivateAnimation = Animator.StringToHash("deactivate");
 
-    public enum State
-    {
-        disabled, idle, activate, run, attack, hurt, deactivate
-    };
-
-    public State CurrentState;
-
-    private void Start()
+    void Start()
     {
         SetState(State.idle);
     }
 
-    private void Update()
+    void Update()
     {
         switch (CurrentState)
         {
@@ -59,6 +54,14 @@ public class AnimationController : MonoBehaviour
         }
     }
 
+    IEnumerator HoldStateFor(State targetState, State restState, float duration)
+    {
+        CurrentState = targetState;
+        yield return new WaitForSeconds(duration);
+        
+        CurrentState = restState;
+    }
+
     public void SetState(State newState)
     {
         if (CurrentState == newState)
@@ -77,12 +80,5 @@ public class AnimationController : MonoBehaviour
         }
 
         StartCoroutine(HoldStateFor(newState, restState, duration));
-    }
-
-    IEnumerator HoldStateFor(State targetState, State restState, float duration)
-    {
-        CurrentState = targetState;
-        yield return new WaitForSeconds(duration);
-        CurrentState = restState;
     }
 }

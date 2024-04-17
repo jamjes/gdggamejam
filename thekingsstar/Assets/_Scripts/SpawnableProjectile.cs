@@ -3,26 +3,9 @@ using UnityEngine;
 
 public class SpawnableProjectile : MonoBehaviour
 {
-    bool _run = true;
-
-    public enum ProjectileType
-    {
-        Bullet, Bomb
-    };
-    
-    [Header("Animation Settings")]
-    [SerializeField] Sprite _staticSprite;
-    [SerializeField] Sprite _dynamicSprite;
-    [SerializeField] SpriteRenderer _spr;
+    public enum ProjectileType { Bullet, Bomb };
     public ProjectileType Type;
-
-    [Header("Physics Settings")]
-    [SerializeField] Rigidbody2D _rb;
-    float _speed;
     public int Power { private set; get; } = 1;
-    int _direction = 0;
-    bool parried;
-
     public void Configure(int speed, int power, int direction)
     {
         float minSpeed = speed - 1;
@@ -32,6 +15,16 @@ public class SpawnableProjectile : MonoBehaviour
         Power = power;
         _direction = direction;
     }
+
+    [SerializeField] Sprite _staticSprite;
+    [SerializeField] Sprite _dynamicSprite;
+    [SerializeField] SpriteRenderer _spr;
+    [SerializeField] Rigidbody2D _rb;
+
+    bool _run = true;
+    float _speed;
+    int _direction = 0;
+    bool parried;
 
     void Update()
     {
