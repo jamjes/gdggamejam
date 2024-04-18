@@ -12,12 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 511cfe5a86c216a4ea7c5748e15f5520, type: 3}
   m_Name: Turret Settings
   m_EditorClassIdentifier: 
-  Health: 5
-  StartDelay: 1
-  DelayDuration: 3
+  Health: 10
+  DelayDuration: 0
   ReloadSpeed: 2
   Projectiles:
   - {fileID: 1226173606107172578, guid: 778ff4cbd6a146c40b581bac22c1e722, type: 3}
   - {fileID: 6057156523928942994, guid: e69e39b06ebc3d546a2ac27737dcbeed, type: 3}
-  ProjectileSpeed: 7
+  ProjectileSpeed: 6
   ProjectilePower: 1

@@ -21,17 +21,17 @@ public class PlayerStateMachine : MonoBehaviour
 
     private void OnEnable()
     {
-        GameManager.OnGameEnter += Reset;
+        StartButton.OnGameBegin += Init;
     }
 
-    private void Reset()
+    private void Init()
     {
         CurrentState = State.idle;
     }
 
     private void OnDisable()
     {
-        GameManager.OnGameEnter -= Reset;
+        StartButton.OnGameBegin -= Init;
     }
 
     private void Start()

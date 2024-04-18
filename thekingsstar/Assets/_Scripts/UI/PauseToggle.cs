@@ -18,6 +18,7 @@ public class PauseToggle : MonoBehaviour
         }
         else
         {
+            Debug.Log("Toggle OFF");
             pauseMenu.SetActive(false);
         }
     }

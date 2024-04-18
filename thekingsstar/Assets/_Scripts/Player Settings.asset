@@ -12,3 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df40216b396fb6e46a3245e7c3569e87, type: 3}
   m_Name: Player Settings
   m_EditorClassIdentifier: 
+  JumpForce: 8

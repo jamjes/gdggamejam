@@ -18,21 +18,22 @@ public class PlayerController : MonoBehaviour, IDamageable
     [SerializeField] Transform slashOrigin;
     [SerializeField] LayerMask projectileLayer;
     [SerializeField] LayerMask groundLayer;
+    [SerializeField] PlayerSettingsScriptableObject playerSettings;
 
     BoxCollider2D _col;
     Rigidbody2D _rb;
 
     private void OnEnable()
     {
-        GameManager.OnGameEnter += Restart;
+        StartButton.OnGameBegin += Init;
     }
 
     private void OnDisable()
     {
-        GameManager.OnGameEnter -= Restart;
+        StartButton.OnGameBegin -= Init;
     }
 
-    void Restart()
+    void Init()
     {
         if (IsDead)
         {
@@ -129,7 +130,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     void Jump()
     {
-        _rb.velocity = new Vector2(_rb.velocity.x, 9);
+        _rb.velocity = new Vector2(_rb.velocity.x, playerSettings.JumpForce);
     }
 
     bool GroundedCheck()

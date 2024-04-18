@@ -14,13 +14,13 @@ public class EnemyTurret : MonoBehaviour, IDamageable
     [SerializeField] TextMeshProUGUI healthLabel;
 
     bool _run = false;
-    int health;
+    float health;
     float timerRef;
 
     private void OnEnable()
     {
         PlayerController.OnDeathEnter += ForceEnd;
-        GameManager.OnGameEnter += Init;
+        StartButton.OnGameBegin += Init;
         GameManager.OnPauseEnter += Freeze;
         GameManager.OnPauseExit += UnFreeze;
     }
@@ -28,7 +28,7 @@ public class EnemyTurret : MonoBehaviour, IDamageable
     private void OnDisable()
     {
         PlayerController.OnDeathEnter -= ForceEnd;
-        GameManager.OnGameEnter -= Init;
+        StartButton.OnGameBegin -= Init;
         GameManager.OnPauseEnter -= Freeze;
         GameManager.OnPauseExit -= UnFreeze;
     }
@@ -54,33 +54,11 @@ public class EnemyTurret : MonoBehaviour, IDamageable
         }
     }
 
-    public void EnableTurret(float startDelay, float reloadSpeed)
-    {
-        if (_settings.StartDelay)
-        {
-            _settings.DelayDuration = startDelay;
-        }
-        
-        _settings.ReloadSpeed = reloadSpeed;
-        Init();
-    }
-
     void Init()
     {
         health = _settings.Health;
         healthLabel.text = health.ToString();
-        float delay;
-
-        if (_settings.StartDelay)
-        {
-            delay = _settings.DelayDuration;
-        }
-        else
-        {
-            delay = 0;
-        }
-        
-        StartCoroutine(DelayedStart(delay));
+        StartCoroutine(DelayedStart(_settings.DelayDuration));
     }
 
     IEnumerator DelayedStart(float delay)

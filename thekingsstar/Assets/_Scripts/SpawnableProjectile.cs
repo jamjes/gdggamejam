@@ -112,11 +112,18 @@ public class SpawnableProjectile : MonoBehaviour
     {
         GameManager.OnPauseEnter += Freeze;
         GameManager.OnPauseExit += UnFreeze;
+        EnemyTurret.OnTurretDeath += SelfDestruct;
     }
 
     private void OnDisable()
     {
         GameManager.OnPauseEnter -= Freeze;
         GameManager.OnPauseExit -= UnFreeze;
+        EnemyTurret.OnTurretDeath -= SelfDestruct;
+    }
+
+    void SelfDestruct()
+    {
+        Destroy(gameObject);
     }
 }
