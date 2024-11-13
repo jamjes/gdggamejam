@@ -16,16 +16,18 @@ public class Bullet : MonoBehaviour, IParryable
 
     public delegate void BulletEvent();
     public static event BulletEvent OnTutorialEnter;
+    public static event BulletEvent OnBulletReset;
 
     private void Awake()
     {
         size = transform.localScale;
         spawnPos = transform.position;
-        
+        this.gameObject.SetActive(false);
     }
 
     public void Fire()
     {
+        this.gameObject.SetActive(true);
         speed = normalSpeed;
     }
 
@@ -40,7 +42,7 @@ public class Bullet : MonoBehaviour, IParryable
         Color original = sprs[0].color;
         foreach(SpriteRenderer spr in sprs)
         {
-            spr.color = Color.white;
+            spr.color = Color.red;
         }
         
         yield return new WaitForSeconds(.1f);
@@ -74,9 +76,16 @@ public class Bullet : MonoBehaviour, IParryable
         }
         else if (collision.tag == "Reset")
         {
-            speed = normalSpeed;
+            speed = 0;
             direction = -1;
             transform.position = spawnPos;
+            
+            if (OnBulletReset != null)
+            {
+                OnBulletReset();
+            }
+
+            this.gameObject.SetActive(false);
         }
     }
 }

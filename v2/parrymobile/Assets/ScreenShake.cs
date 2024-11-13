@@ -11,11 +11,13 @@ public class ScreenShake : MonoBehaviour
     void OnEnable()
     {
         Player.OnParry += Shake;
+        Enemy.OnShoot += Shake;
     }
 
     void OnDisable()
     {
         Player.OnParry -= Shake;
+        Enemy.OnShoot -= Shake;
     }
 
     private void Shake()
