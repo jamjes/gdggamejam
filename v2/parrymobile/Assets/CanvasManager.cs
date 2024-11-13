@@ -6,7 +6,7 @@ using TMPro;
 public class CanvasManager : MonoBehaviour
 {
     [SerializeField] GameObject[] toggleElements;
-    [SerializeField] TMP_Text text;
+    [SerializeField] TMP_Text text, playerHealth, enemyHealth;
     bool isShowing;
 
     private void Awake()
@@ -45,7 +45,7 @@ public class CanvasManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return))
         {
             HideElements();
         }
@@ -68,5 +68,16 @@ public class CanvasManager : MonoBehaviour
         yield return new WaitForSeconds(.3f);
         text.gameObject.SetActive(false);
         isShowing = false;
+    }
+
+    private void UpdateHealth(string name, int health)
+    {
+        if (name == "player")
+        {
+            playerHealth.text = health.ToString();
+            return;
+        }
+
+        enemyHealth.text = health.ToString();
     }
 }

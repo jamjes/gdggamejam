@@ -6,8 +6,9 @@ using UnityEngine;
 public class Bullet : MonoBehaviour, IParryable
 {
     private int direction = -1;
-    private float speed = 7;
-    private float parrySpeed = 10;
+    [SerializeField] private float normalSpeed = 10;
+    [SerializeField] private float parrySpeed = 20;
+    private float speed;
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private SpriteRenderer[] sprs;
     Vector3 size;
@@ -20,11 +21,16 @@ public class Bullet : MonoBehaviour, IParryable
     {
         size = transform.localScale;
         spawnPos = transform.position;
+        
+    }
+
+    public void Fire()
+    {
+        speed = normalSpeed;
     }
 
     public void Parry()
     {
-        Debug.Log("Parry");
         direction = 0;
         StartCoroutine(ParryAfterDelay());
     }
@@ -56,8 +62,6 @@ public class Bullet : MonoBehaviour, IParryable
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        float originalSpeed = speed;
-
         if (collision.tag == "Tutorial")
         {
             speed = 0;
@@ -70,7 +74,7 @@ public class Bullet : MonoBehaviour, IParryable
         }
         else if (collision.tag == "Reset")
         {
-            speed = 7;
+            speed = normalSpeed;
             direction = -1;
             transform.position = spawnPos;
         }

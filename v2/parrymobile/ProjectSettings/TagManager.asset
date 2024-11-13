@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Tutorial
   - Reset
+  - Character
   layers:
   - Default
   - TransparentFX

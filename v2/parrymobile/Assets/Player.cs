@@ -14,9 +14,11 @@ public class Player : MonoBehaviour
     private bool isAttacking = false;
     private float lastAttackTime;
     private int animationIndex = 0;
-
+    public SwordSound sfx;
+    public int health;
     public delegate void PlayerEvents();
     public static event PlayerEvents OnMiss;
+    public static event PlayerEvents OnParry;
 
     void Update()
     {
@@ -74,6 +76,11 @@ public class Player : MonoBehaviour
             foreach (Collider2D bullet in bullets)
             {
                 bullet.GetComponent<Bullet>().Parry();
+                sfx.PlaySound(true);
+                if (OnParry != null)
+                {
+                    OnParry();
+                }
             }
         }
         else
@@ -81,10 +88,9 @@ public class Player : MonoBehaviour
             if (OnMiss != null)
             {
                 OnMiss();
+                sfx.PlaySound(false);
             }
         }
-        
-        
 
         yield return new WaitForSecondsRealtime(.3f);
         
